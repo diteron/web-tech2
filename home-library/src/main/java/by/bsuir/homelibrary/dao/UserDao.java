@@ -16,6 +16,16 @@ public class UserDao {
     private static final String USERS_FILE_NAME = "users.txt";
     private static final String DELIMITER = ",";
 
+    static {
+        File file = new File(USERS_FILE_NAME);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to create file: " + USERS_FILE_NAME);
+        }
+    }
+
     public Optional<User> findByLogin(String login) {
         return Optional.of(findByLoginInFile(login));
     }

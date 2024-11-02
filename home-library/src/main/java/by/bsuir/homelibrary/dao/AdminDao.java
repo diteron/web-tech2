@@ -16,6 +16,16 @@ public class AdminDao {
     private static final String ADMINS_FILE_NAME = "admins.txt";
     private static final String DELIMITER = ",";
 
+    static {
+        File file = new File(ADMINS_FILE_NAME);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to create file: " + ADMINS_FILE_NAME);
+        }
+    }
+
     public Optional<User> findByLogin(String login) {
         
         return Optional.of(findByLoginInFile(login));

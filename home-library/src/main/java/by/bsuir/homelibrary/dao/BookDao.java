@@ -15,6 +15,16 @@ public class BookDao {
     private static final String BOOKS_FILE_NAME = "books.txt";
     private static final String DELIMITER = ",";
 
+    static {
+        File file = new File(BOOKS_FILE_NAME);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to create file: " + BOOKS_FILE_NAME);
+        }
+    }
+
     /*public List<Book> findByTitle(String title) {
         List<Book> foundBooks = new ArrayList<>();
 
