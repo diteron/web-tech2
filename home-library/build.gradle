@@ -1,0 +1,28 @@
+plugins {
+	id 'application'
+}
+
+group = 'by.bsuir'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(23)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    implementation 'jakarta.mail:jakarta.mail-api:2.1.3'
+}
+
+testing {
+    suites {
+        test {
+            useJUnitJupiter('5.11.3')
+        }
+    }
+}
