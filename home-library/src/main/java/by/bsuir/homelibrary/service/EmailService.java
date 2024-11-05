@@ -31,10 +31,10 @@ public class EmailService {
 
     private static final Map<String, String> ENV = System.getenv();
     
-    private static final String HOST = System.getenv("SMPT_URL"); 
+    private static final String HOST = System.getenv("SMTP_ADDR"); 
     private static final String PORT = "587";
-    private static final String EMAIL_ADDRESS = ENV.get("EMAIL_ADDRESS");
-    private static final String PASSWORD = ENV.get("EMAIL_PASSWORD");
+    private static final String EMAIL_ADDRESS = ENV.get("EMAIL_ADDR");
+    private static final String PASSWORD = ENV.get("EMAIL_PWD");
     
     private final Properties PROPERTIES = new Properties();
     private final Session SESSION;

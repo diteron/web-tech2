@@ -1,0 +1,4 @@
+Crime and Punishment;Fyodor Dostoevsky;1866;book
+One Flew Over the Cuckoo's Nest;Ken Kesey;1962;book
+The Catcher in the Rye;J. D. Salinger;1951;book
+Effective Modern C++;Scott Meyers;2014;e-book

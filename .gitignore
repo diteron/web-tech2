@@ -35,7 +35,5 @@ build/
 ### VS Code ###
 .vscode/
 
-### Files with data ###
-admins.txt
+### Files with user data ###
 users.txt
-books.txt
