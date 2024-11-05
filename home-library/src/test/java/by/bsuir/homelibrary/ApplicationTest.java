@@ -1,10 +1,10 @@
-package by.bsuir.homelibrary;
+// package by.bsuir.homelibrary;
 
-import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.Test;
 
-public class ApplicationTest {
-    @Test
-    void testMain() {
+// public class ApplicationTest {
+//     @Test
+//     void testMain() {
 
-    }
-}
+//     }
+// }
