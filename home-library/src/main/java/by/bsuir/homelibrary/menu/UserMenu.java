@@ -20,6 +20,8 @@ public class UserMenu {
     protected final static BookService BOOK_SERVICE = BookService.getInstance();
     protected final static EmailService EMAIL_SERVICE = EmailService.getInstance();
 
+    private static final int PAGE_SIZE = 8;
+
     /**
      * Constructs a UserMenu instance with the specified scanner.
      *
@@ -82,9 +84,35 @@ public class UserMenu {
     }
 
     protected void printBooks(List<Book> books) {
-        for (var book : books) {
-            System.out.println(book);
-            System.out.println("---------------------------------------------");
+        int totalBooks = books.size();
+        int totalPages = (int) Math.ceil((double) totalBooks / PAGE_SIZE);
+        int currentPage = 0;
+
+        while (true) {
+            int start = currentPage * PAGE_SIZE;
+            int end = Math.min(start + PAGE_SIZE, totalBooks);
+            for (int i = start; i < end; ++i) {
+                System.out.println(books.get(i));
+                System.out.println("---------------------------------------------");
+            }
+
+            System.out.println("\nPage " + (currentPage + 1) + " of " + totalPages);
+            System.out.println("Enter 'n' for next page, 'p' for previous page, or 'q' to quit.");
+
+            String input = SCANNER.nextLine().toLowerCase();
+
+            if (input.equals("n") && currentPage < totalPages - 1) {
+                currentPage++;
+            }
+            else if (input.equals("p") && currentPage > 0) {
+                currentPage--;
+            }
+            else if (input.equals("q")) {
+                break;
+            }
+            else {
+                System.out.println("Invalid input. Please try again.");
+            }
         }
     }
 
