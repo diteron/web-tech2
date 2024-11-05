@@ -15,14 +15,16 @@ public abstract class AbstractUserService {
     public abstract boolean isLogIn(String login, String password);
 
     protected boolean isEmailValid(String email) {
-        String emaiRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$";
+        String emaiRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return Pattern.compile(emaiRegex)
                 .matcher(email)
                 .matches();
     }
 
     protected String getPasswordHash(String password) {
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), new byte[0], HASH_ITERATIONS, HASH_KEY_LENGTH);
+        byte[] salt = new byte[16];
+        salt = "ggg".getBytes();
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt, HASH_ITERATIONS, HASH_KEY_LENGTH);
         SecretKeyFactory factory;
         try {
             factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -39,6 +41,6 @@ public abstract class AbstractUserService {
 
     protected boolean isUserPasswordCorrect(String enteredPassword, String passwordHash) {
         String enteredPasswordHash = getPasswordHash(enteredPassword);
-        return enteredPasswordHash == passwordHash;
+        return enteredPasswordHash.equals(passwordHash);
     }
 }

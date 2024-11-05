@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 import by.bsuir.homelibrary.entity.User;
+import by.bsuir.homelibrary.entity.serializer.EntitySerializer;;
 
 public class UserDao {
+    private static UserDao instance = null;
+
     private static final String USERS_FILE_NAME = "users.txt";
-    private static final String DELIMITER = ",";
 
     static {
         File file = new File(USERS_FILE_NAME);
@@ -26,17 +28,25 @@ public class UserDao {
         }
     }
 
-    public Optional<User> findByLogin(String login) {
-        return Optional.of(findByLoginInFile(login));
+    private UserDao() {
+        
     }
 
-    private User findByLoginInFile(String login) {
+    public static UserDao getInstance() {
+        if (instance == null) {
+            instance = new UserDao();
+        }
+
+        return instance;
+    }
+
+    public Optional<User> findByLogin(String login) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(USERS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] userFields = line.split(DELIMITER);
-                if (userFields[0] == login) {
-                    return createUserFromFileFields(userFields);
+                User user = EntitySerializer.deserialize(line, User.class);
+                if (user.getLogin().equals(login)) {
+                    return Optional.of(user);
                 }
             }
         }
@@ -44,12 +54,7 @@ public class UserDao {
             e.printStackTrace();
         }
 
-        return null;
-    }
-
-    private User createUserFromFileFields(String[] fields) {
-        return new User(fields[0], fields[1],
-                fields[2], false);
+        return Optional.empty();
     }
 
     public List<User> getAllUsers() {
@@ -58,8 +63,8 @@ public class UserDao {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(USERS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] userFields = line.split(DELIMITER);
-                users.add(createUserFromFileFields(userFields));
+                User user = EntitySerializer.deserialize(line, User.class);
+                users.add(user);
             }
         }
         catch (IOException e) {
@@ -70,24 +75,14 @@ public class UserDao {
     }
 
     public void addUser(User user) {
-        if (isUserExists(user.getLogin())) {
-            System.out.println("User with login '" + user.getLogin() + "' already exists.");
-        } 
-
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(USERS_FILE_NAME, true))) {
-            String userLine = createUserFileLine(user);
+            String userLine = EntitySerializer.serialize(user);
             fileWriter.append(userLine);
             fileWriter.newLine();
         }
         catch(IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private String createUserFileLine(User user) {
-        return user.getLogin() + DELIMITER
-                + user.getPasswordHash() + DELIMITER
-                + user.getEmail();
     }
 
     public boolean isUserExists(String userLogin) {
@@ -105,8 +100,8 @@ public class UserDao {
             String line;
             while ((line = fileReader.readLine()) != null) {
                 if (!isLineDeleted) {
-                    String[] userFields = line.split(DELIMITER);
-                    if (userFields[0] == user.getLogin()) {
+                    User currentUserInFile = EntitySerializer.deserialize(line, User.class);
+                    if (currentUserInFile.equals(user)) {
                         isLineDeleted = true;
                         continue;
                     }
@@ -141,7 +136,7 @@ public class UserDao {
         }
     }
 
-    public void updateUser(User user) {
+    public void updateUser(User originalUser, User updateUser) {
         File originalFile = new File(USERS_FILE_NAME);
         File tempFile = new File("tempFile.txt");
         boolean isLineUpdated = false;
@@ -152,9 +147,9 @@ public class UserDao {
             String line;
             while ((line = fileReader.readLine()) != null) {
                 if (!isLineUpdated) {
-                    String[] userFields = line.split(DELIMITER);
-                    if (userFields[0] == user.getLogin()) {
-                        line = createUserFileLine(user);
+                    User currentUserInFile = EntitySerializer.deserialize(line, User.class);
+                    if (currentUserInFile.equals(originalUser)) {
+                        line = EntitySerializer.serialize(updateUser);
                         isLineUpdated = true;
                     }
                 }
@@ -170,10 +165,10 @@ public class UserDao {
         saveChanges(originalFile, tempFile);
 
         if (isLineUpdated) {
-            System.out.println("User with login '" + user.getLogin() + "' updated successfully");
+            System.out.println("User with login '" + updateUser.getLogin() + "' updated successfully");
         }
         else {
-            System.out.println("User with login '" + user.getLogin() + "' does not exist");
+            System.out.println("User with login '" + updateUser.getLogin() + "' does not exist");
         }
     }
 }

@@ -1,31 +1,60 @@
 package by.bsuir.homelibrary.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import by.bsuir.homelibrary.dao.BookDao;
 import by.bsuir.homelibrary.entity.Book;
 
 public class BookService {
-    private static final BookDao BOOK_DAO = new BookDao();
+    private static BookService instance = null;
 
-    public void addBook(String title, String author, Integer yearOfPublication, Book.Type type) {
-        BOOK_DAO.addBook(new Book(title, author, yearOfPublication, type));
+    private static final BookDao BOOK_DAO = BookDao.getInstance();
+
+    private BookService() {
+        
     }
 
-    public List<Book> findBooksByTitle(String title) {
-        return BOOK_DAO.findBooks(new Book.Builder().title(title).build());
+    public static BookService getInstance() {
+        if (instance == null) {
+            instance = new BookService();
+        }
+
+        return instance;
     }
 
-    public List<Book> findBooksByAuthor(String author) {
-        return BOOK_DAO.findBooks(new Book.Builder().author(author).build());
+    public void addBook(Book book) {
+        if (!book.isContainsAllData()) {
+            System.out.println("Invalid book:\n"
+                    + book);
+            return;
+        }
+        else if (BOOK_DAO.isBookExists(book)) {
+            System.out.println("Book already exists:\n"
+                    + book);
+            return;
+        }
+
+        BOOK_DAO.addBook(book);
     }
 
-    public List<Book> findBooksByYearOfPublication(Integer yearOfPublication) {
-        return BOOK_DAO.findBooks(new Book.Builder().yearOfPublication(yearOfPublication).build());
+    public void addBooks(List<Book> books) {
+        for (var book : books) {
+            if (!book.isContainsAllData()) {
+                System.out.println("Invalid book in list:\n"
+                        + book);
+                continue;
+            }
+            BOOK_DAO.addBook(book);
+        }
     }
 
-    public List<Book> findBooksByType(Book.Type type) {
-        return BOOK_DAO.findBooks(new Book.Builder().type(type).build());
+    public List<Book> findBooksByFields(Book bookWithSearchFilters) {
+        if (!bookWithSearchFilters.isContainsAnyData()) {
+            return new ArrayList<Book>();
+        }
+
+        return BOOK_DAO.findBooks(bookWithSearchFilters);
     }
 
     public List<Book> getAllBooks() {
@@ -33,24 +62,40 @@ public class BookService {
     }
 
     public void deleteBook(Book book) {
+        if (!book.isContainsAllData()) {
+            System.out.println("Invalid book.");
+            return;
+        }
+
         BOOK_DAO.deleteBook(book);
     }
 
-    public void updateBook(Book originalBook,
-            String newTitle, String newAuthor, Integer newYearOfPublication, Book.Type newType) {
+    public void updateBook(Book originalBook, Book bookWithFieldsToUpdate) {
+        if (!bookWithFieldsToUpdate.isContainsAnyData()) {
+            System.out.println("Invalid book.");
+            return;
+        }
 
-        BOOK_DAO.updateBook(originalBook,
-                createBookForUpdate(originalBook, newTitle, newAuthor, newYearOfPublication, newType));
+        BOOK_DAO.updateBook(originalBook, createBookForUpdate(originalBook, bookWithFieldsToUpdate));
     }
 
-    private Book createBookForUpdate(Book originalBook, 
-            String title, String author, Integer yearOfPublication, Book.Type type) {
+    private Book createBookForUpdate(Book originalBook, Book bookWithFieldsToUpdate) {
+        String updateTitle = bookWithFieldsToUpdate.getTitle() != null
+                ? bookWithFieldsToUpdate.getTitle()
+                : originalBook.getTitle();
 
-        String updatedTitle = title != null ? title : originalBook.getTitle();
-        String updatedAuthor = author != null ? author : originalBook.getAuthor();
-        Integer updatedYearOfPublication = yearOfPublication != null ? yearOfPublication : originalBook.getYearOfPublication();
-        Book.Type updatedType = type != null ? type : originalBook.getType();
+        String updateAuthor = bookWithFieldsToUpdate.getAuthor() != null
+                ? bookWithFieldsToUpdate.getAuthor() 
+                : originalBook.getAuthor();
 
-        return new Book(updatedTitle, updatedAuthor, updatedYearOfPublication, updatedType);
+        Integer updateYearOfPublication = bookWithFieldsToUpdate.getYearOfPublication() != null
+                ? bookWithFieldsToUpdate.getYearOfPublication() 
+                : originalBook.getYearOfPublication();
+
+        Book.Type updateType = bookWithFieldsToUpdate.getType() != null
+                ? bookWithFieldsToUpdate.getType()
+                : originalBook.getType();
+
+        return new Book(updateTitle, updateAuthor, updateYearOfPublication, updateType);
     }
 }

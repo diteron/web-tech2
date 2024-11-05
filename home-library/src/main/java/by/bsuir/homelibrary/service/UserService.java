@@ -6,10 +6,24 @@ import by.bsuir.homelibrary.dao.UserDao;
 import by.bsuir.homelibrary.entity.User;
 
 public class UserService extends AbstractUserService {
-    private static final UserDao USER_DAO = new UserDao();
+    private static UserService instance = null;
+
+    private static final UserDao USER_DAO = UserDao.getInstance();
+
+    private UserService() {
+        
+    }
+
+    public static UserService getInstance() {
+        if (instance == null) {
+            instance = new UserService();
+        }
+
+        return instance;
+    }
 
     public boolean addUser(String login, String password, String email) {
-        if(!isEmailValid(email)) {
+        if (USER_DAO.isUserExists(login) || !isEmailValid(email)) {
             return false;
         }
 

@@ -49,34 +49,31 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    public static class Builder {
-        private String login;
-        private String passwordHash;
-        private String email;
-        private boolean isAdmin = false;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((login == null) ? 0 : login.hashCode());
+        
+        return result;
+    }
 
-        public User build() {
-            return new User(this.login, this.passwordHash, this.email, this.isAdmin);
-        }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+            
+        User other = (User) obj;
 
-        public Builder login(String login) {
-            this.login = login;
-            return this;
-        }
+        if (login == null && other.login != null)
+            return false;
+        else if (!this.login.equals(other.login))
+            return false;
 
-        public Builder passwordHash(String passwordHash) {
-            this.passwordHash = passwordHash;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder isAdmin(boolean isAdmin) {
-            this.isAdmin = isAdmin;
-            return this;
-        }
+        return true;
     }
 }

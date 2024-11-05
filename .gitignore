@@ -34,3 +34,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Files with data ###
+admins.txt
+users.txt
+books.txt

@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.bsuir.homelibrary.entity.Book;
+import by.bsuir.homelibrary.entity.serializer.EntitySerializer;
 
 public class BookDao {
+    private static BookDao instance = null;
+
     private static final String BOOKS_FILE_NAME = "books.txt";
-    private static final String DELIMITER = ",";
 
     static {
         File file = new File(BOOKS_FILE_NAME);
@@ -25,44 +27,28 @@ public class BookDao {
         }
     }
 
-    /*public List<Book> findByTitle(String title) {
-        List<Book> foundBooks = new ArrayList<>();
-
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
-            String line;
-            while ((line = fileReader.readLine()) != null) {
-                String[] bookFields = line.split(DELIMITER);
-                if (bookFields[0] == title) {
-                    foundBooks.add(new Book.Builder()
-                            .title(bookFields[0])
-                            .author(bookFields[1])
-                            .yearOfPublication(Integer.parseInt(bookFields[2]))
-                            .type(Book.Type.valueOf(bookFields[3]))
-                            .build());
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return foundBooks;
+    private BookDao() {
+        
     }
-    */
 
-    public List<Book> findBooks(Book book) {
+    public static BookDao getInstance() {
+        if (instance == null) {
+            instance = new BookDao();
+        }
+
+        return instance;
+    }
+
+    public List<Book> findBooks(Book bookWithSearchFilters) {
         List<Book> foundBooks = new ArrayList<>();
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] bookFields = line.split(DELIMITER);
-                if (bookFields[0] == book.getTitle()
-                        || bookFields[1] == book.getAuthor()
-                        || bookFields[2] == book.getYearOfPublication().toString()
-                        || bookFields[3] == book.getType().toString()) {
-
-                    foundBooks.add(createBookFromFileFields(bookFields));
+                Book bookFromFile = EntitySerializer.deserialize(line, Book.class);
+                Book bookForComparison = createBookForComparison(bookFromFile, bookWithSearchFilters);
+                if (bookFromFile.equals(bookForComparison)) {
+                    foundBooks.add(bookFromFile);
                 }
             }
         }
@@ -73,13 +59,21 @@ public class BookDao {
         return foundBooks;
     }
 
-    private Book createBookFromFileFields(String[] fields) {
-        return new Book.Builder()
-                .title(fields[0])
-                .author(fields[1])
-                .yearOfPublication(Integer.parseInt(fields[2]))
-                .type(Book.Type.valueOf(fields[3]))
-                .build();
+    private Book createBookForComparison(Book bookFromFile, Book bookWithSearchFilters) {
+        String title = bookWithSearchFilters.getTitle() != null
+                ? bookWithSearchFilters.getTitle()
+                : bookFromFile.getTitle();
+        String author = bookWithSearchFilters.getAuthor() != null
+                ? bookWithSearchFilters.getAuthor()
+                : bookFromFile.getAuthor();
+        Integer yearOfPublication = bookWithSearchFilters.getYearOfPublication() != null
+                ? bookWithSearchFilters.getYearOfPublication()
+                : bookFromFile.getYearOfPublication();
+        Book.Type type = bookWithSearchFilters.getType() != null
+                ? bookWithSearchFilters.getType()
+                : bookFromFile.getType();
+                
+        return new Book(title, author, yearOfPublication, type);
     }
 
     public List<Book> getAllBooks() {
@@ -88,8 +82,8 @@ public class BookDao {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] bookFields = line.split(DELIMITER);
-                books.add(createBookFromFileFields(bookFields));
+                Book book = EntitySerializer.deserialize(line, Book.class);
+                books.add(book);
             }
         }
         catch (IOException e) {
@@ -99,62 +93,9 @@ public class BookDao {
         return books;
     }
 
-    /*public List<Book> findByYearOfPublication(Integer yearOfPublication) {
-        List<Book> foundBooks = new ArrayList<>();
-
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
-            String line;
-            while ((line = fileReader.readLine()) != null) {
-                String[] bookFields = line.split(DELIMITER);
-                if (bookFields[2] == Integer.toString(yearOfPublication)) {
-                    foundBooks.add(new Book.Builder()
-                            .title(bookFields[0])
-                            .author(bookFields[1])
-                            .yearOfPublication(Integer.parseInt(bookFields[2]))
-                            .type(Book.Type.valueOf(bookFields[3]))
-                            .build());
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return foundBooks;
-    }
-
-    public List<Book> findByType(Book.Type type) {
-        List<Book> foundBooks = new ArrayList<>();
-
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
-            String line;
-            while ((line = fileReader.readLine()) != null) {
-                String[] bookFields = line.split(DELIMITER);
-                if (bookFields[3] == type.toString()) {
-                    foundBooks.add(new Book.Builder()
-                            .title(bookFields[0])
-                            .author(bookFields[1])
-                            .yearOfPublication(Integer.parseInt(bookFields[2]))
-                            .type(Book.Type.valueOf(bookFields[3]))
-                            .build());
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return foundBooks;
-    }
-    */
-
     public void addBook(Book book) {
-        if (isBookExists(book)) {
-            System.out.println("Book already exists.");
-        } 
-
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(BOOKS_FILE_NAME, true))) {
-            String bookLine = bookToFileLine(book);
+            String bookLine = EntitySerializer.serialize(book);
             fileWriter.append(bookLine);
             fileWriter.newLine();
         }
@@ -163,12 +104,12 @@ public class BookDao {
         }
     }
         
-    private boolean isBookExists(Book book) {
+    public boolean isBookExists(Book book) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] bookFields = line.split(DELIMITER);
-                if (isFileLineFieldsEqualBook(bookFields, book)) {
+                Book currentBookInFile = EntitySerializer.deserialize(line, Book.class);
+                if (currentBookInFile.equals(book)) {
                     return true;
                 }
             }
@@ -180,20 +121,6 @@ public class BookDao {
         return false;
     }
 
-    private String bookToFileLine(Book book) {
-        return book.getTitle() + DELIMITER
-                + book.getAuthor() + DELIMITER
-                + book.getYearOfPublication() + DELIMITER
-                + book.getType();
-    }
-
-    private boolean isFileLineFieldsEqualBook(String[] lineFields, Book book) {
-        return lineFields[0] == book.getTitle()
-                && lineFields[1] == book.getAuthor()
-                && lineFields[2] == book.getYearOfPublication().toString()
-                && lineFields[3] == book.getType().toString();
-    }
-
     public void deleteBook(Book book) {
         File originalFile = new File(BOOKS_FILE_NAME);
         File tempFile = new File("tempFile.txt");
@@ -201,12 +128,11 @@ public class BookDao {
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(originalFile));
                 BufferedWriter fileWriter = new BufferedWriter(new FileWriter(tempFile))) {
-
             String line;
             while ((line = fileReader.readLine()) != null) {
                 if (!isLineDeleted) {
-                    String[] bookFields = line.split(DELIMITER);
-                    if (isFileLineFieldsEqualBook(bookFields, book)) {
+                    Book currentBookInFile = EntitySerializer.deserialize(line, Book.class);
+                    if (currentBookInFile.equals(book)) {
                         isLineDeleted = true;
                         continue;
                     }
@@ -248,13 +174,12 @@ public class BookDao {
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(originalFile));
                 BufferedWriter fileWriter = new BufferedWriter(new FileWriter(tempFile))) {
-
             String line;
             while ((line = fileReader.readLine()) != null) {
                 if (!isLineUpdated) {
-                    String[] bookFields = line.split(DELIMITER);
-                    if (isFileLineFieldsEqualBook(bookFields, originalBook)) {
-                        line = bookToFileLine(updateBook);
+                    Book currentBookInFile = EntitySerializer.deserialize(line, Book.class);
+                    if (currentBookInFile.equals(originalBook)) {
+                        line = EntitySerializer.serialize(updateBook);
                         isLineUpdated = true;
                     }
                 }
@@ -276,5 +201,4 @@ public class BookDao {
             System.out.println("Book does not exist");
         }
     }
-
 }

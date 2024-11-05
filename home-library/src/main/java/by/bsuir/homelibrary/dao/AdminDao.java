@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 import by.bsuir.homelibrary.entity.User;
+import by.bsuir.homelibrary.entity.serializer.EntitySerializer;
 
 public class AdminDao {
+    private static AdminDao instance = null;
+
     private static final String ADMINS_FILE_NAME = "admins.txt";
-    private static final String DELIMITER = ",";
 
     static {
         File file = new File(ADMINS_FILE_NAME);
@@ -25,70 +27,62 @@ public class AdminDao {
             throw new RuntimeException("Failed to create file: " + ADMINS_FILE_NAME);
         }
     }
-
-    public Optional<User> findByLogin(String login) {
+    
+    private AdminDao() {
         
-        return Optional.of(findByLoginInFile(login));
     }
 
-    private User findByLoginInFile(String login) {
+    public static AdminDao getInstance() {
+        if (instance == null) {
+            instance = new AdminDao();
+        }
+
+        return instance;
+    }
+
+    public Optional<User> findByLogin(String login) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(ADMINS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] adminFields = line.split(DELIMITER);
-                if (adminFields[0] == login) {
-                    return createAdminFromFileFields(adminFields);
+                User admin = EntitySerializer.deserialize(line, User.class);
+                if (admin.getLogin().equals(login)) {
+                    return Optional.of(admin);
                 }
             }
         }
         catch(IOException e) {
             e.printStackTrace();
         }
-
-        return null;
-    }
-
-    private User createAdminFromFileFields(String[] fields) {
-        return new User(fields[0], fields[1],
-                fields[2], true);
+        
+        return Optional.empty();
     }
 
     public List<User> getAllAdmins() {
-        List<User> users = new ArrayList<>();
+        List<User> admins = new ArrayList<>();
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(ADMINS_FILE_NAME))) {
             String line;
             while ((line = fileReader.readLine()) != null) {
-                String[] adminFields = line.split(DELIMITER);
-                users.add(createAdminFromFileFields(adminFields));
+                User admin = EntitySerializer.deserialize(line, User.class);
+                admins.add(admin);
             }
         }
         catch (IOException e) {
             e.printStackTrace();
         }
         
-        return users;
+        return admins;
     }
 
     public void addAdmin(User admin) {
-        if (isAdminExists(admin.getLogin())) {
-            System.out.println("Admin with login '" + admin.getLogin() + "' already exists.");
-        } 
-
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(ADMINS_FILE_NAME, true))) {
-            String adminLine = createAdminFileLine(admin);
+            String adminLine = EntitySerializer.serialize(admin);
             fileWriter.append(adminLine);
             fileWriter.newLine();
         }
         catch(IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private String createAdminFileLine(User admin) {
-        return admin.getLogin() + DELIMITER
-                + admin.getPasswordHash() + DELIMITER
-                + admin.getEmail();
     }
 
     public void deleteAdmin(User admin) {
@@ -98,12 +92,11 @@ public class AdminDao {
 
         try (BufferedReader fileReader = new BufferedReader(new FileReader(originalFile));
                 BufferedWriter fileWriter = new BufferedWriter(new FileWriter(tempFile))) {
-
             String line;
             while ((line = fileReader.readLine()) != null) {
                 if (!isLineDeleted) {
-                    String[] adminFields = line.split(DELIMITER);
-                    if (adminFields[0] == admin.getLogin()) {
+                    User currentAdminInFile = EntitySerializer.deserialize(line, User.class);
+                    if (currentAdminInFile.equals(admin)) {
                         isLineDeleted = true;
                         continue;
                     }
@@ -142,7 +135,7 @@ public class AdminDao {
         return findByLogin(adminLogin).isPresent();
     }
 
-    public void updateAdmin(User admin) {
+    public void updateAdmin(User originalAdmin, User updateAdmin) {
         File originalFile = new File(ADMINS_FILE_NAME);
         File tempFile = new File("tempFile.txt");
         boolean isLineUpdated = false;
@@ -153,9 +146,9 @@ public class AdminDao {
             String line;
             while ((line = fileReader.readLine()) != null) {
                 if (!isLineUpdated) {
-                    String[] adminFields = line.split(DELIMITER);
-                    if (adminFields[0] == admin.getLogin()) {
-                        line = createAdminFileLine(admin);;
+                    User currentAdminInFile = EntitySerializer.deserialize(line, User.class);
+                    if (currentAdminInFile.equals(originalAdmin)) {
+                        line = EntitySerializer.serialize(updateAdmin);
                         isLineUpdated = true;
                     }
                 }
@@ -171,10 +164,10 @@ public class AdminDao {
         saveChanges(originalFile, tempFile);
 
         if (isLineUpdated) {
-            System.out.println("Admin with login '" + admin.getLogin() + "' updated successfully");
+            System.out.println("Admin with login '" + updateAdmin.getLogin() + "' updated successfully");
         }
         else {
-            System.out.println("Admin with login '" + admin.getLogin() + "' does not exist");
+            System.out.println("Admin with login '" + updateAdmin.getLogin() + "' does not exist");
         }
     }
 }

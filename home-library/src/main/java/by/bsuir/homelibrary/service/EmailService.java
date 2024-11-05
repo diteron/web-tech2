@@ -1,6 +1,7 @@
 package by.bsuir.homelibrary.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import by.bsuir.homelibrary.dao.AdminDao;
@@ -18,19 +19,21 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;;
 
 public class EmailService {
-    //private static final BookDao BOOK_DAO = new BookDao();
-    private static final UserDao USER_DAO = new UserDao();
-    private static final AdminDao ADMIN_DAO = new AdminDao();
+    private static EmailService instance = null;
 
-    private static final String HOST = "smpt.mail.ru";
+    private static final UserDao USER_DAO = UserDao.getInstance();
+    private static final AdminDao ADMIN_DAO = AdminDao.getInstance();
+
+    private static final Map<String, String> ENV = System.getenv();
+    private static final String HOST = System.getenv("SMPT_URL"); 
     private static final String PORT = "587";
-    private static final String EMAIL_ADDRESS = "bsuir.webtech@mail.ru";
-    private static final String PASSWORD = "password";      // TODO: Change to the real password
+    private static final String EMAIL_ADDRESS = ENV.get("EMAIL_ADDRESS");
+    private static final String PASSWORD = ENV.get("EMAIL_PASSWORD");
     
     private final Properties PROPERTIES = new Properties();
     private final Session SESSION;
 
-    public EmailService() {
+    private EmailService() {
         PROPERTIES.put("mail.smtp.auth", "true");
         PROPERTIES.put("mail.smtp.starttls.enable", "true");
         PROPERTIES.put("mail.smtp.host", HOST);
@@ -42,6 +45,14 @@ public class EmailService {
                 return new PasswordAuthentication(EMAIL_ADDRESS, PASSWORD);
             }
         });
+    }
+
+    public static EmailService getInstance() {
+        if (instance == null) {
+            instance = new EmailService();
+        }
+
+        return instance;
     }
 
     public void proposeBooksToCatalog(List<Book> newBooks) {
@@ -67,7 +78,10 @@ public class EmailService {
         List<User> users = USER_DAO.getAllUsers();
         String messageBody = generateAddedBooksMessageBody(newBooks);
         for (var user : users) {
-            sendEmail(user.getEmail(), "Changes in the book catalog", messageBody);
+            System.out.println(user.getEmail() + ":");
+            if (sendEmail(user.getEmail(), "Changes in the book catalog", messageBody)) {
+                System.out.println("Success");
+            }
         }
     }
 
@@ -82,7 +96,7 @@ public class EmailService {
         return messageBody.toString();
     }
 
-    private void sendEmail(String emailAddress, String subject, String messageBody) {
+    private boolean sendEmail(String emailAddress, String subject, String messageBody) {
         try {
             Message message = new MimeMessage(SESSION);
                 message.setFrom(new InternetAddress(EMAIL_ADDRESS));
@@ -91,9 +105,11 @@ public class EmailService {
                 message.setText(messageBody);
 
                 Transport.send(message);
+                return true;
         }
         catch (MessagingException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return false;
         }
     }
 }
