@@ -13,11 +13,20 @@ import java.util.Optional;
 import by.bsuir.homelibrary.entity.User;
 import by.bsuir.homelibrary.entity.serializer.EntitySerializer;;
 
+/**
+ * The {@code UserDao} class manages user-related data operations, including retrieving,
+ * adding, updating, and deleting user information stored in a file. This class follows
+ * a singleton pattern to ensure a single instance for file-based user management.
+ */
 public class UserDao {
     private static UserDao instance = null;
 
     private static final String USERS_FILE_NAME = "users.txt";
 
+    /**
+     * Static initializer block to ensure the user data file is created if it does not already exist.
+     * If the file creation fails, a {@link RuntimeException} is thrown.
+     */
     static {
         File file = new File(USERS_FILE_NAME);
         try {
@@ -40,6 +49,12 @@ public class UserDao {
         return instance;
     }
 
+    /**
+     * Finds a user by their login.
+     *
+     * @param login the login of the user to find
+     * @return an {@code Optional} containing the user if found, otherwise empty
+     */
     public Optional<User> findByLogin(String login) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(USERS_FILE_NAME))) {
             String line;
@@ -57,6 +72,11 @@ public class UserDao {
         return Optional.empty();
     }
 
+    /**
+     * Retrieves a list of all users.
+     *
+     * @return a list of all {@code User} objects
+     */
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
 
@@ -74,6 +94,11 @@ public class UserDao {
         return users;
     }
 
+    /**
+     * Adds a user to the file.
+     *
+     * @param user the {@code User} to add
+     */    
     public void addUser(User user) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(USERS_FILE_NAME, true))) {
             String userLine = EntitySerializer.serialize(user);
@@ -85,10 +110,21 @@ public class UserDao {
         }
     }
 
+    /**
+     * Checks if a user exists by login.
+     *
+     * @param userLogin the login of the user to check
+     * @return {@code true} if the user exists, otherwise {@code false}
+     */    
     public boolean isUserExists(String userLogin) {
         return findByLogin(userLogin).isPresent();
     }
 
+    /**
+     * Deletes a specified user from the file.
+     *
+     * @param user the {@code User} to delete
+     */    
     public void deleteUser(User user) {
         File originalFile = new File(USERS_FILE_NAME);
         File tempFile = new File("tempFile.txt");
@@ -125,6 +161,7 @@ public class UserDao {
         }
     }
 
+    // Saves changes made to the file by renaming the temporary file to the original file name.
     private void saveChanges(File originalFile, File tempFile) {
         if (!originalFile.delete()) {
             System.out.println("Could not delete original users file");
@@ -136,6 +173,12 @@ public class UserDao {
         }
     }
 
+    /**
+     * Updates the data of an existing user.
+     *
+     * @param originalUser the original {@code User} data
+     * @param updateUser   the updated {@code User} data
+     */    
     public void updateUser(User originalUser, User updateUser) {
         File originalFile = new File(USERS_FILE_NAME);
         File tempFile = new File("tempFile.txt");

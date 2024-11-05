@@ -8,18 +8,32 @@ import by.bsuir.homelibrary.entity.Book;
 import by.bsuir.homelibrary.service.BookService;
 import by.bsuir.homelibrary.service.EmailService;
 
+/**
+ * Represents a menu for regular users in the application, allowing them to interact with the book catalog.
+ * The menu provides options to show the catalog, find books, propose new books, and log out.
+ */
 public class UserMenu {
-    private boolean exit = false;
-    private final Scanner SCANNER;
-    private String userLogin;
+    protected boolean exit = false;
+    protected final Scanner SCANNER;
+    protected String userLogin;
 
-    private final static BookService BOOK_SERVICE = BookService.getInstance();
-    private final static EmailService EMAIL_SERVICE = EmailService.getInstance();
+    protected final static BookService BOOK_SERVICE = BookService.getInstance();
+    protected final static EmailService EMAIL_SERVICE = EmailService.getInstance();
 
+    /**
+     * Constructs a UserMenu instance with the specified scanner.
+     *
+     * @param scanner the Scanner object used for user input
+     */
     public UserMenu(Scanner scanner) {
         SCANNER = scanner;
     }
 
+    /**
+     * Starts the user menu, allowing the user to log in and interact with the menu options.
+     *
+     * @param login the login identifier of the user
+     */
     public void start(String login) {
         exit = false;
         userLogin = login;
@@ -32,7 +46,7 @@ public class UserMenu {
         }
     }
 
-    private void displayMenu() {
+    protected void displayMenu() {
         System.out.println("\n============ User Menu (Log in as: " + userLogin +  ") ============");
         System.out.println("1. Show catalog");
         System.out.println("2. Find books");
@@ -41,7 +55,7 @@ public class UserMenu {
         System.out.print("Choose an option: ");
     }
 
-    private void handleChoice(int choice) {
+    protected void handleChoice(int choice) {
         switch (choice) {
             case 1:
                 handleShowCatalog();
@@ -61,34 +75,26 @@ public class UserMenu {
         }
     }
 
-    private void handleShowCatalog() {
+    protected void handleShowCatalog() {
         List<Book> books = BOOK_SERVICE.getAllBooks();
-        System.out.println("\nAll books in the catalog:");
+        System.out.println("\nAll books in the catalog:\n");
         printBooks(books);
     }
 
-    private void printBooks(List<Book> books) {
+    protected void printBooks(List<Book> books) {
         for (var book : books) {
             System.out.println(book);
             System.out.println("---------------------------------------------");
         }
     }
 
-    private void handleFindBooks() {
+    protected void handleFindBooks() {
         System.out.println("\nEnter fields to find book. (To exclude a field from search, leave it empty):");
         Book bookWithSearchFields = createBookWithPossibleNullFields();
 
-        List<Book> books = BOOK_SERVICE.findBooksByFields(bookWithSearchFields);
-        System.out.println("\nBooks found in the catalog:");
+        List<Book> books = BOOK_SERVICE.findBooksByFilters(bookWithSearchFields);
+        System.out.println("\nBooks found in the catalog:\n");
         printBooks(books);
-    }
-
-    private Book.Type enteredStringToBookType(String type) {
-        if (type.isEmpty() || (!type.equals("book") && !type.equals("e-book"))) {
-            return null;
-        }
-
-        return Book.Type.fromString(type);
     }
 
     private void handleProposeBooks() {
@@ -117,7 +123,8 @@ public class UserMenu {
         EMAIL_SERVICE.proposeBooksToCatalog(books);
     }
 
-    private Book createBook() {
+    // Creates a book from user input, including all required fields.
+    protected Book createBook() {
         System.out.print("Title: ");
         String title = SCANNER.nextLine();
 
@@ -133,7 +140,9 @@ public class UserMenu {
         return new Book(title, author, Integer.parseInt(yearOfPublication), Book.Type.fromString(type));
     }
 
-    private Book createBookWithPossibleNullFields() {
+    // Creates a book object with possible null fields based on user input.
+    // Used to find book by filters
+    protected Book createBookWithPossibleNullFields() {
         System.out.print("Title: ");
         String title = SCANNER.nextLine();
 
@@ -152,5 +161,14 @@ public class UserMenu {
                         ? Integer.parseInt(yearOfPublication)
                         : null,
                 enteredStringToBookType(type));
+    }
+
+    // Converts a string input into a Book.Type enumeration, returning null for invalid inputs.
+    protected Book.Type enteredStringToBookType(String type) {
+        if (type.isEmpty() || (!type.equals("book") && !type.equals("e-book"))) {
+            return null;
+        }
+
+        return Book.Type.fromString(type);
     }
 }

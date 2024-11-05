@@ -1,5 +1,12 @@
 package by.bsuir.homelibrary.entity;
 
+/**
+ * Represents a user with login credentials, email, and admin status.
+ * <p>
+ * The {@code User} class provides methods to get and set a user's login,
+ * hashed password, email address, and admin status.
+ * </p>
+ */
 public class User {
     private String login;
     private String passwordHash;
@@ -40,7 +47,7 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -58,6 +65,15 @@ public class User {
         return result;
     }
 
+    /**
+     * Checks if this user is equal to another object.
+     * <p>
+     * Two users are considered equal if they have the same login name.
+     * </p>
+     *
+     * @param obj the object to compare with this user
+     * @return {@code true} if the objects are equal; {@code false} otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)

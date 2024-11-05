@@ -5,6 +5,13 @@ import java.util.Scanner;
 import by.bsuir.homelibrary.service.AdminService;
 import by.bsuir.homelibrary.service.UserService;
 
+/**
+ * Provides the main interactive menu for user and admin login operations.
+ * <p>
+ * The {@code MainMenu} class allows users to log in, log in as an administrator, 
+ * or create a new user account. It serves as the entry point for the application.
+ * </p>
+ */
 public class MainMenu {
     private boolean exit = false;
     private static final Scanner SCANNER = new Scanner(System.in);
@@ -15,6 +22,9 @@ public class MainMenu {
     private static final UserMenu USER_MENU = new UserMenu(SCANNER);
     private static final AdminMenu ADMIN_MENU = new AdminMenu(SCANNER);
 
+    /**
+     * Starts the main menu session, displaying options until the user decides to exit.
+     */
     public void start() {
         while (!exit) {
             displayMenu();
@@ -100,6 +110,5 @@ public class MainMenu {
         else {
             System.out.println("Failed to create new user. Please try again.");    
         }
-
     }
 }

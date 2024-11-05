@@ -18,6 +18,11 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;;
 
+/**
+ * The {@code EmailService} class provides functionalities for sending emails,
+ * such as notifying users about new books added to the catalog or proposing books to admins.
+ * This class follows the singleton pattern, ensuring a single instance.
+ */
 public class EmailService {
     private static EmailService instance = null;
 
@@ -25,6 +30,7 @@ public class EmailService {
     private static final AdminDao ADMIN_DAO = AdminDao.getInstance();
 
     private static final Map<String, String> ENV = System.getenv();
+    
     private static final String HOST = System.getenv("SMPT_URL"); 
     private static final String PORT = "587";
     private static final String EMAIL_ADDRESS = ENV.get("EMAIL_ADDRESS");
@@ -55,6 +61,11 @@ public class EmailService {
         return instance;
     }
 
+    /**
+     * Sends an email to all admins with a proposed list of books to add to the catalog.
+     *
+     * @param newBooks the list of books proposed for the catalog
+     */    
     public void proposeBooksToCatalog(List<Book> newBooks) {
         List<User> admins = ADMIN_DAO.getAllAdmins();
         String messageBody = generateProposedBooksMessageBody(newBooks);                         
@@ -62,7 +73,7 @@ public class EmailService {
             sendEmail(admin.getEmail(), "Proposed changes to the book catalog", messageBody);
         }
     }
-
+ 
     private String generateProposedBooksMessageBody(List<Book> newBooks) {
         StringBuilder messageBody = new StringBuilder("Proposed books for the catalog:\n");
         for (var newBook : newBooks) {
@@ -74,6 +85,11 @@ public class EmailService {
         return messageBody.toString();
     }
 
+    /**
+     * Notifies all users about newly added books in the catalog.
+     *
+     * @param newBooks the list of newly added books
+     */    
     public void notifyAboutAddedBooks(List<Book> newBooks) {
         List<User> users = USER_DAO.getAllUsers();
         String messageBody = generateAddedBooksMessageBody(newBooks);

@@ -12,11 +12,22 @@ import java.util.List;
 import by.bsuir.homelibrary.entity.Book;
 import by.bsuir.homelibrary.entity.serializer.EntitySerializer;
 
+/**
+ * The {@code BookDao} class is a singleton data access object (DAO) for managing book entities stored in a text file.
+ * This class provides methods for CRUD operations on books, storing them as serialized data in the file specified by {@link #BOOKS_FILE_NAME}.
+ * <p>
+ * The singleton instance of this class is lazily initialized.
+ * </p>
+ */
 public class BookDao {
     private static BookDao instance = null;
 
     private static final String BOOKS_FILE_NAME = "books.txt";
 
+    /**
+     * Static initializer block to ensure the book data file is created if it does not already exist.
+     * If the file creation fails, a {@link RuntimeException} is thrown.
+     */
     static {
         File file = new File(BOOKS_FILE_NAME);
         try {
@@ -39,6 +50,12 @@ public class BookDao {
         return instance;
     }
 
+    /**
+     * Finds books that match the specified search criteria.
+     *
+     * @param bookWithSearchFilters a {@code Book} object containing the search filters
+     * @return a {@link List} of {@code Book} objects that match the search criteria
+     */    
     public List<Book> findBooks(Book bookWithSearchFilters) {
         List<Book> foundBooks = new ArrayList<>();
 
@@ -59,6 +76,7 @@ public class BookDao {
         return foundBooks;
     }
 
+    // Creates a Book object for comparison by copying non-null values from the filter book.   
     private Book createBookForComparison(Book bookFromFile, Book bookWithSearchFilters) {
         String title = bookWithSearchFilters.getTitle() != null
                 ? bookWithSearchFilters.getTitle()
@@ -76,6 +94,11 @@ public class BookDao {
         return new Book(title, author, yearOfPublication, type);
     }
 
+    /**
+     * Retrieves a list of all books.
+     *
+     * @return a {@link List} of all {@code Book} objects
+     */    
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
 
@@ -93,6 +116,11 @@ public class BookDao {
         return books;
     }
 
+    /**
+     * Adds a new book to the file.
+     *
+     * @param book the {@code Book} to add
+     */    
     public void addBook(Book book) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(BOOKS_FILE_NAME, true))) {
             String bookLine = EntitySerializer.serialize(book);
@@ -103,7 +131,13 @@ public class BookDao {
             e.printStackTrace();
         }
     }
-        
+    
+    /**
+     * Checks if a specific book exists in the file.
+     *
+     * @param book the {@code Book} to check
+     * @return {@code true} if the book exists, {@code false} otherwise
+     */    
     public boolean isBookExists(Book book) {
         try (BufferedReader fileReader = new BufferedReader(new FileReader(BOOKS_FILE_NAME))) {
             String line;
@@ -121,6 +155,11 @@ public class BookDao {
         return false;
     }
 
+    /**
+     * Deletes a specific book from the file.
+     *
+     * @param book the {@code Book} to delete
+     */    
     public void deleteBook(Book book) {
         File originalFile = new File(BOOKS_FILE_NAME);
         File tempFile = new File("tempFile.txt");
@@ -156,6 +195,7 @@ public class BookDao {
         }
     }
 
+    // Saves changes made to the file by renaming the temporary file to the original file name.  
     private void saveChanges(File originalFile, File tempFile) {
         if (!originalFile.delete()) {
             System.out.println("Could not delete original file");
@@ -167,6 +207,12 @@ public class BookDao {
         }
     }
 
+    /**
+     * Updates an existing book with new information.
+     *
+     * @param originalBook the original {@code Book} to be updated
+     * @param updateBook   the new {@code Book} information
+     */    
     public void updateBook(Book originalBook, Book updateBook) {
         File originalFile = new File(BOOKS_FILE_NAME);
         File tempFile = new File("tempFile.txt");

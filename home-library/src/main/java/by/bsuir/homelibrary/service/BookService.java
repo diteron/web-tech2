@@ -6,6 +6,11 @@ import java.util.List;
 import by.bsuir.homelibrary.dao.BookDao;
 import by.bsuir.homelibrary.entity.Book;
 
+/**
+ * The {@code BookService} class provides methods to manage books in the catalog, including
+ * adding, updating, deleting, and searching for books. This class follows the singleton pattern
+ * to ensure only one instance exists.
+ */
 public class BookService {
     private static BookService instance = null;
 
@@ -23,6 +28,11 @@ public class BookService {
         return instance;
     }
 
+    /**
+     * Adds a book to the catalog if it contains all required data and does not already exist.
+     *
+     * @param book the {@code Book} object to add
+     */    
     public void addBook(Book book) {
         if (!book.isContainsAllData()) {
             System.out.println("Invalid book:\n"
@@ -38,6 +48,11 @@ public class BookService {
         BOOK_DAO.addBook(book);
     }
 
+    /**
+     * Adds a list of books to the catalog. Invalid books in the list are skipped.
+     *
+     * @param books a list of {@code Book} objects to add
+     */    
     public void addBooks(List<Book> books) {
         for (var book : books) {
             if (!book.isContainsAllData()) {
@@ -49,7 +64,13 @@ public class BookService {
         }
     }
 
-    public List<Book> findBooksByFields(Book bookWithSearchFilters) {
+    /**
+     * Finds books in the catalog based on specified search filters.
+     *
+     * @param bookWithSearchFilters a {@code Book} object containing search filters
+     * @return a list of {@code Book} objects matching the specified filters
+     */    
+    public List<Book> findBooksByFilters(Book bookWithSearchFilters) {
         if (!bookWithSearchFilters.isContainsAnyData()) {
             return new ArrayList<Book>();
         }
@@ -70,6 +91,12 @@ public class BookService {
         BOOK_DAO.deleteBook(book);
     }
 
+    /**
+     * Updates an existing book in the catalog with specified fields to update.
+     *
+     * @param originalBook          the original {@code Book} object to update
+     * @param bookWithFieldsToUpdate a {@code Book} object containing fields to update
+     */    
     public void updateBook(Book originalBook, Book bookWithFieldsToUpdate) {
         if (!bookWithFieldsToUpdate.isContainsAnyData()) {
             System.out.println("Invalid book.");
@@ -79,6 +106,7 @@ public class BookService {
         BOOK_DAO.updateBook(originalBook, createBookForUpdate(originalBook, bookWithFieldsToUpdate));
     }
 
+    // Creates a new Book object with updated fields.
     private Book createBookForUpdate(Book originalBook, Book bookWithFieldsToUpdate) {
         String updateTitle = bookWithFieldsToUpdate.getTitle() != null
                 ? bookWithFieldsToUpdate.getTitle()

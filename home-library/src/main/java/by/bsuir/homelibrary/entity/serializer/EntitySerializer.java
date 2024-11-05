@@ -4,9 +4,31 @@ import java.lang.reflect.Field;
 
 import by.bsuir.homelibrary.dao.FileDelimiter;
 
+/**
+ * Utility class for serializing and deserializing objects.
+ * <p>
+ * The {@code EntitySerializer} class provides static methods to convert an object
+ * into a string representation and to reconstruct an object from its serialized form.
+ * The class uses reflection to access and manipulate object fields.
+ * </p>
+ * <p>
+ * The default delimiter for serialized data is defined in {@code FileDelimiter.DELIMITER}.
+ * </p>
+ */
 public class EntitySerializer {
     private final static String DELIMITER = FileDelimiter.DELIMITER;
 
+    /**
+     * Serializes the given object to a delimited string.
+     * <p>
+     * Each field in the object is converted to a string representation, with enum values
+     * using their {@code toString()} method. Fields are separated by a specified delimiter.
+     * </p>
+     *
+     * @param obj the object to serialize
+     * @return a string representing the serialized form of the object
+     * @throws SerializerException if an error occurs during serialization
+     */
     public static String serialize(Object obj) {
         StringBuilder builder = new StringBuilder();
         Field[] fields = obj.getClass().getDeclaredFields();
@@ -35,6 +57,20 @@ public class EntitySerializer {
         return builder.toString();
     }
 
+    /**
+     * Deserializes a delimited string into an object of the specified class.
+     * <p>
+     * Fields are set according to the order they appear in the serialized data.
+     * Enum fields require a static {@code fromString(String)} method in the enum type
+     * to convert strings back into enum instances.
+     * </p>
+     *
+     * @param <T>   the type of the object to deserialize
+     * @param data  the serialized string representation of the object
+     * @param clazz the class of the object to deserialize
+     * @return an instance of {@code T} with fields populated from the serialized data
+     * @throws SerializerException if an error occurs during deserialization
+     */    
     public static <T> T deserialize(String data, Class<T> clazz) {
         try {
             T obj = clazz.getDeclaredConstructor().newInstance();

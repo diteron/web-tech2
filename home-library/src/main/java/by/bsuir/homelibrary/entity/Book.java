@@ -1,6 +1,21 @@
 package by.bsuir.homelibrary.entity;
 
+/**
+ * Represents a book with a title, author, year of publication, and type.
+ * <p>
+ * The {@code Book} class provides basic functionality to get and set the
+ * properties of a book, as well as methods to check if any or all data fields are set.
+ * It also overrides {@code toString()}, {@code hashCode()}, and {@code equals()} methods.
+ * </p>
+ */
 public class Book {
+    /**
+     * Enum representing the types of books.
+     * <p>
+     * The {@code Type} enum includes options for an e-book and a physical book.
+     * Each type has a string representation for easier display.
+     * </p>
+     */
     public enum Type {
         EBOOK("e-book"),
         BOOK("book");
@@ -16,6 +31,13 @@ public class Book {
             return this.TYPE;
         }
 
+        /**
+         * Returns the {@code Type} that matches the specified string, ignoring case.
+         *
+         * @param type the string representation of the type
+         * @return the matching {@code Type} enum constant
+         * @throws IllegalArgumentException if no matching type is found
+         */
         public static Type fromString(String type) {
             for (Type t : Type.values()) {
                 if (t.TYPE.equalsIgnoreCase(type)) {
@@ -74,16 +96,31 @@ public class Book {
         this.type = type;
     }
 
+    /**
+     * Checks if any data is set for this book.
+     *
+     * @return {@code true} if any field is non-null; {@code false} otherwise
+     */
     public boolean isContainsAnyData() {
         return title != null || author != null || yearOfPublication != null
                 || type != null;
     }
 
+    /**
+     * Checks if all data fields are set for this book.
+     *
+     * @return {@code true} if all fields are non-null; {@code false} otherwise
+     */
     public boolean isContainsAllData() {
         return title != null && author != null && yearOfPublication != null
                 && type != null;
     }
 
+    /**
+     * Returns a string representation of the book, with each field on a new line.
+     *
+     * @return a formatted string representation of the book
+     */
     @Override
     public String toString() {
         return title + "\n"
@@ -105,6 +142,16 @@ public class Book {
         return result;
     }
 
+    /**
+     * Checks if this book is equal to another object.
+     * <p>
+     * Two books are considered equal if they have the same title, author,
+     * year of publication, and type.
+     * </p>
+     *
+     * @param obj the object to compare with this book
+     * @return {@code true} if the objects are equal; {@code false} otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
