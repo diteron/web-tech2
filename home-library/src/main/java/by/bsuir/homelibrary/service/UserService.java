@@ -40,7 +40,7 @@ public class UserService extends AbstractUserService {
             return false;
         }
 
-        String passwordHash = getPasswordHash(password);
+        String passwordHash = createPasswordHash(password);
         USER_DAO.addUser(new User(login, passwordHash, email, false));
         return true;
     }

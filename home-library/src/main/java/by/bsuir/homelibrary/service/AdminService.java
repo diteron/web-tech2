@@ -40,7 +40,7 @@ public class AdminService extends AbstractUserService {
             return false;
         }
 
-        String passwordHash = getPasswordHash(password);
+        String passwordHash = createPasswordHash(password);
         ADMIN_DAO.addAdmin(new User(login, passwordHash, email, true));
         return true;
     }
