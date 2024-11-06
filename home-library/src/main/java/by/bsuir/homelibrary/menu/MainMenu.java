@@ -65,7 +65,7 @@ public class MainMenu {
     }
 
     private void handleLogin() {
-        System.out.print("Log in: ");
+        System.out.print("Login: ");
         String login = SCANNER.nextLine();
 
         System.out.print("Password: ");
