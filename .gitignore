@@ -37,3 +37,6 @@ build/
 
 ### Files with user data ###
 users.txt
+
+### Bin files ###
+*.jar
