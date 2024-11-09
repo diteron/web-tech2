@@ -4,14 +4,14 @@ import by.bsuir.portmultithreading.port.Port;
 
 public class ShipsManager {
     private Port port;
-    private Ship[] ships;
-    private final Integer NUMBER_OF_SHIPS;
+    private final Ship[] SHIPS;
+    private final int NUMBER_OF_SHIPS;
 
-    public ShipsManager(Integer numberOfShips) {
+    public ShipsManager(int numberOfShips) {
         NUMBER_OF_SHIPS = numberOfShips;
-        ships = new Ship[NUMBER_OF_SHIPS];
+        SHIPS = new Ship[NUMBER_OF_SHIPS];
         for (int i = 0; i < NUMBER_OF_SHIPS; ++i) {
-            ships[i] = new Ship();
+            SHIPS[i] = new Ship();
         }
     }
 
@@ -21,17 +21,18 @@ public class ShipsManager {
 
     public void startSendingShips() {
         while (true) {
-            for (Ship ship : ships) {
+            for (Ship ship : SHIPS) {
                 if (!ship.isWorking()) {
-                    ship.createRandomTask();
-                    ship.startWorking();
-                    port.addShip(ship);
                     try {
-                        Thread.sleep(500); // Simulate some delay
+                        Thread.sleep(525);  // Simulate some delay when sending ships
                     }
                     catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
+
+                    ship.createRandomTask();
+                    ship.startWorking();
+                    port.addShip(ship);
                 }
             }
         }

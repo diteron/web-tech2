@@ -3,7 +3,7 @@ package by.bsuir.portmultithreading.ship;
 import java.util.Random;
 
 public class Ship implements Comparable<Ship> {
-    private static Integer shipsCounter = 0;
+    private static int shipsCounter = 0;
 
     public enum Operation {
         LOADING("loading"),
@@ -21,33 +21,33 @@ public class Ship implements Comparable<Ship> {
         }
     }
 
-    private Integer id;
+    private int id;
 
-    private final static Integer MIN_PRIORITY = 0;
-    private final static Integer MAX_PRIORITY = 9;
+    private final static int MIN_PRIORITY = 0;
+    private final static int MAX_PRIORITY = 5;
 
     /**
      * Ship priority ({@code 0-10})
      */
-    private Integer priority;
+    private int priority;
 
     /**
      * Ship cargo priority ({@code 0-10}). The cargo priority is more important
      * compared to the ship priority
      */
-    private Integer cargoPriority;
+    private int cargoPriority;
 
     private Operation operation;
     private boolean isWorking = false;
 
-    private final static Integer MAX_NUMBER_OF_CONTAINERS = 20000;
-    private final static Integer MIN_NUMBER_OF_CONTAINERS = 10000;
-    private final static Integer TIME_FOR_ONE_CONTAINER_US = 150;   // in us
-    private Integer numberOfCargo;
+    private final static int MAX_NUMBER_OF_CONTAINERS = 20000;
+    private final static int MIN_NUMBER_OF_CONTAINERS = 15000;
+    private final static int TIME_FOR_ONE_CONTAINER_US = 150;   // in us
+    private int numberOfCargo;
 
-    private final static Integer BERTHING_TIME_EPSILON_US = 100;    // in us
-    private Long specifiedBerthingTime;
-    private Long actualBerthingTime;
+    private final static int BERTHING_TIME_EPSILON_US = 100;    // in us
+    private long specifiedBerthingTime;
+    private long actualBerthingTime;
 
     private final static Random RANDOM_GENERATOR = new Random();
 
@@ -65,7 +65,7 @@ public class Ship implements Comparable<Ship> {
         setRandomOperation();
         setRandomCargoPriority();
         setRandomNumberOfCargo();
-        specifiedBerthingTime = Long.valueOf(numberOfCargo * TIME_FOR_ONE_CONTAINER_US);
+        specifiedBerthingTime = numberOfCargo * TIME_FOR_ONE_CONTAINER_US;
         actualBerthingTime = createActualBerthingTime();
     }
 
@@ -83,20 +83,20 @@ public class Ship implements Comparable<Ship> {
                 RANDOM_GENERATOR.nextInt((MAX_NUMBER_OF_CONTAINERS - MIN_NUMBER_OF_CONTAINERS) + 1);
     }
 
-    private Long createActualBerthingTime() {
-        Long berthingEpsilon = RANDOM_GENERATOR.nextLong(BERTHING_TIME_EPSILON_US) - BERTHING_TIME_EPSILON_US / 2;
+    private long createActualBerthingTime() {
+        long berthingEpsilon = RANDOM_GENERATOR.nextLong(BERTHING_TIME_EPSILON_US) - BERTHING_TIME_EPSILON_US / 2;
         return numberOfCargo * (TIME_FOR_ONE_CONTAINER_US + berthingEpsilon);
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public Integer getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public Integer getCargoPriority() {
+    public int getCargoPriority() {
         return cargoPriority;
     }
 
@@ -108,25 +108,25 @@ public class Ship implements Comparable<Ship> {
         return operation;
     }
 
-    public Integer getNumberOfCargo() {
+    public int getNumberOfCargo() {
         return numberOfCargo;
     }
 
-    public Integer getNeededGoods() {
+    public int getNeededGoods() {
         return numberOfCargo;
     }
 
     /**
      * @return specified berthing time in ms
      */
-    public Long getSpecifiedBerthingTime() {
+    public long getSpecifiedBerthingTime() {
         return specifiedBerthingTime / 1000;
     }
 
     /**
      * @return actual berthing time in ms
      */
-    public Long getActualBerthingTime() {
+    public long getActualBerthingTime() {
         return actualBerthingTime / 1000;
     }
 
@@ -152,11 +152,6 @@ public class Ship implements Comparable<Ship> {
 
     @Override
     public int compareTo(Ship other) {
-        if (this.cargoPriority.equals(other.cargoPriority)) {
-            return Integer.compare(this.priority, other.priority);
-        }
-        else {
-            return Integer.compare(this.cargoPriority, other.cargoPriority); 
-        }
+        return Integer.compare(this.cargoPriority + this.priority, other.cargoPriority + other.priority);
     }
 }

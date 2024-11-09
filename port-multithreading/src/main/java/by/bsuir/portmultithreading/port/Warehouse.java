@@ -1,9 +1,9 @@
 package by.bsuir.portmultithreading.port;
 
 public class Warehouse {
-    private Integer numberOfGoods = 1500000;
+    private int numberOfGoods = 200000;
 
-    public synchronized boolean isEnoughGoods(Integer neededGoods) {
+    public synchronized  boolean isEnoughGoods(int neededGoods) {
         return numberOfGoods >= neededGoods;
     }
 
@@ -11,11 +11,15 @@ public class Warehouse {
         numberOfGoods += 50000;
     } 
 
-    public synchronized void sendGoodsToBerth(Integer goodsQty) {
+    public synchronized void sendGoodsToBerth(int goodsQty) {
         numberOfGoods -= goodsQty;
     }
 
-    public synchronized void recieveGoodsFromBerth(Integer goodsQty) {
+    public synchronized void recieveGoodsFromBerth(int goodsQty) {
         numberOfGoods += goodsQty;
+    }
+
+    public synchronized int getNuberOfGoods() {
+        return numberOfGoods;
     }
 }

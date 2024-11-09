@@ -5,7 +5,7 @@ import by.bsuir.portmultithreading.ship.ShipsManager;
 
 public class Application {
     public static void main(String[] args) {
-        Port port = new Port();
+        Port port = new Port(5);
         ShipsManager shipsManager = new ShipsManager(20);
         shipsManager.setPort(port);
         port.startProcessingShips();
