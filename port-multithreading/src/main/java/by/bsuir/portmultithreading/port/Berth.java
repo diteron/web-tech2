@@ -12,14 +12,12 @@ public class Berth {
 
         @Override
         public void run() {
-            isWorking = true;
-
             if (operation == Operation.LOADING) {
                 WAREHOUSE.sendGoodsToBerth(berthingShip.getNeededGoods());
             }
 
-            System.out.println(LocalTime.now().format(TIME_FORMAT) + ": " + "Ship id " + berthingShip.getId() + ", " 
-                    + "priority " + berthingShip.getPriority() + ", "
+            System.out.println(LocalTime.now().format(TIME_FORMAT) + ":  " + "Ship with id " + berthingShip.getId() + ", " 
+                    + "ship priority " + berthingShip.getPriority() + ", "
                     + "cargo priority " + berthingShip.getCargoPriority() + ", "
                     + "has started " + operation + " on berth " + id + ", "
                     + "specified duration of berthing " + specifiedTimeOfBerthing + " ms");
@@ -32,8 +30,8 @@ public class Berth {
                 e.printStackTrace();
             }
 
-            System.out.println(LocalTime.now().format(TIME_FORMAT) + ": " + "Ship id " + berthingShip.getId() + ", " 
-                    + "priority " + berthingShip.getPriority() + ", "
+            System.out.println(LocalTime.now().format(TIME_FORMAT) + ":  " + "Ship with id " + berthingShip.getId() + ", " 
+                    + "ship priority " + berthingShip.getPriority() + ", "
                     + "cargo priority " + berthingShip.getCargoPriority() + ", "
                     + "has completed " + operation + " on berth " + id + ", "
                     + "actual duration of berthing " + berthingShip.getActualBerthingTime() + " ms");
@@ -51,8 +49,8 @@ public class Berth {
                 berthingShip.increasePriority();    // Reward ship
             }
 
-            isWorking = false;
             berthingShip.finishWorking();
+            isWorking = false;
         }
     }
 
@@ -75,6 +73,7 @@ public class Berth {
     }
 
     public void startBerthing(Ship ship) {
+        isWorking = true;
         berthingShip = ship;
         specifiedTimeOfBerthing = ship.getSpecifiedBerthingTime();
         operation = berthingShip.getOperation();

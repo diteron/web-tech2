@@ -25,10 +25,11 @@ public class ShipsManager {
                 if (!ship.isWorking()) {
                     ship.createRandomTask();
                     ship.startWorking();
-                    port.addShipToPort(ship);
+                    port.addShip(ship);
                     try {
                         Thread.sleep(500); // Simulate some delay
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
                 }

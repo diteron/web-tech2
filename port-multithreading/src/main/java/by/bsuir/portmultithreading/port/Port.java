@@ -26,7 +26,7 @@ public class Port {
                         WAREHOUSE.orderMoreGoodsFromSuppliers();
                     }
                     if (isBerthAssigned(ship)) {
-                        shipsQueue.poll();
+                        shipsQueue.remove(ship);
                     }
                 }
             }
@@ -64,7 +64,7 @@ public class Port {
         new ProcessingThread().start();
     }
 
-    public void addShipToPort(Ship ship) {
+    public void addShip(Ship ship) {
         synchronized (LOCK) {
             shipsQueue.offer(ship);
             LOCK.notify();

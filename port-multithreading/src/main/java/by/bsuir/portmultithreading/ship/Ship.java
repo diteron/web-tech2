@@ -51,8 +51,6 @@ public class Ship implements Comparable<Ship> {
 
     private final static Random RANDOM_GENERATOR = new Random();
 
-    private static final Object LOCK = new Object();
-
     public Ship() {
         id = ++shipsCounter;
         setRandomPriority();
@@ -133,15 +131,11 @@ public class Ship implements Comparable<Ship> {
     }
 
     public void startWorking() {
-        synchronized (LOCK) {
-            isWorking = false;
-        }
+        isWorking = true;
     }
 
     public void finishWorking() {
-        synchronized (LOCK) {
-            isWorking = false;
-        }
+        isWorking = false;
     }
 
     public void increasePriority() {
