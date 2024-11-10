@@ -32,18 +32,20 @@ public class Port {
         @Override
         public void run() {
             while (true) {
+                Ship ship;
                 synchronized (QUEUE_LOCK) {
                     waitForShips();
 
-                    Ship ship = shipsQueue.poll();
+                    ship = shipsQueue.poll();
                     if (ship.getOperation() == Ship.Operation.LOADING 
                             && !WAREHOUSE.isEnoughGoods(ship.getNeededGoods())) {
                         WAREHOUSE.orderMoreGoodsFromSuppliers();
                     }
 
-                    assignBerth(ship);
                     printLog();
                 }
+
+                assignBerth(ship);
             }
         }
 
