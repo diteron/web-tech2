@@ -107,15 +107,20 @@ public class Port {
         }
 
         private void addShipsOnBerthsToLog(StringBuilder logStringBuilder) {
-            logStringBuilder.append("Ships on berths: \n");
+            logStringBuilder.append("Berths status: \n");
             for (Berth berth : BERTHS) {
-                Ship shipOnBerth = berth.getBerthingShip();
-                logStringBuilder.append("Berth with id " + berth.getId() + " is " + shipOnBerth.getOperation() + " "
-                        + "ship with id " + shipOnBerth.getId() + ", "
-                        + "ship priority " + shipOnBerth.getPriority() + ", "
-                        + "cargo priority " + shipOnBerth.getCargoPriority() + ", "
-                        + "number of cargo " + shipOnBerth.getNumberOfCargo() + ", "
-                        + "specified duration of berthing " + shipOnBerth.getSpecifiedBerthingTime() + " ms\n"); 
+                if (berth.isWorking()) {
+                    Ship shipOnBerth = berth.getBerthingShip();
+                    logStringBuilder.append("Berth with id " + berth.getId() + " is " + shipOnBerth.getOperation() + " "
+                            + "ship with id " + shipOnBerth.getId() + ", "
+                            + "ship priority " + shipOnBerth.getPriority() + ", "
+                            + "cargo priority " + shipOnBerth.getCargoPriority() + ", "
+                            + "number of cargo " + shipOnBerth.getNumberOfCargo() + ", "
+                            + "specified duration of berthing " + shipOnBerth.getSpecifiedBerthingTime() + " ms\n"); 
+                }
+                else {
+                    logStringBuilder.append("Berth with id " + berth.getId() + " is free\n"); 
+                }
             }
         }
     }
