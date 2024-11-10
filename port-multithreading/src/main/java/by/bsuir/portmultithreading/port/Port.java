@@ -20,7 +20,7 @@ public class Port {
         private static final File LOG_FILE;
 
         static {
-            LOG_FILE = new File("port_log.txt");
+            LOG_FILE = new File("port.log");
             try {
                 LOG_FILE.createNewFile();
             }

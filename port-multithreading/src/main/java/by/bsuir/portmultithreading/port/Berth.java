@@ -19,7 +19,7 @@ public class Berth {
         private static final Object LOG_FILE_LOCK = new Object();
 
         static {
-            LOG_FILE = new File("not_on_time_log.txt");
+            LOG_FILE = new File("not_on_time.log");
             try {
                 LOG_FILE.createNewFile();
             }
