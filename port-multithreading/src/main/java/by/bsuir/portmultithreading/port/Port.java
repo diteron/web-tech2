@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.PriorityQueue;
 
@@ -35,14 +36,13 @@ public class Port {
                 synchronized (QUEUE_LOCK) {
                     waitForShips();
 
-                    Ship ship = shipsQueue.peek();
+                    Ship ship = shipsQueue.poll();
                     if (ship.getOperation() == Ship.Operation.LOADING 
                             && !WAREHOUSE.isEnoughGoods(ship.getNeededGoods())) {
                         WAREHOUSE.orderMoreGoodsFromSuppliers();
                     }
-                    if (isBerthAssigned(ship)) {
-                        shipsQueue.remove(ship);
-                    }
+
+                    assignBerth(ship);
                 }
 
                 printLog();
@@ -60,15 +60,22 @@ public class Port {
             }
         }
 
-        private boolean isBerthAssigned(Ship ship) {
-            for (Berth berth : BERTHS) {
-                if (!berth.isWorking()) {
-                    berth.startBerthing(ship);
-                    return true;
+        private void assignBerth(Ship ship) {
+            while (true) {
+                for (Berth berth : BERTHS) {
+                    if (!berth.isWorking()) {
+                        berth.startBerthing(ship);
+                        return;
+                    }
+                }
+
+                try {
+                    Thread.sleep(100);  // Wait if all berths are busy
+                }
+                catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
-
-            return false;
         }
 
         private void printLog() {
@@ -100,7 +107,7 @@ public class Port {
 
         private void addWaitingShipsToLog(StringBuilder logStringBuilder) {
             logStringBuilder.append("Ships waiting for berthing:\n");
-            for (Ship ship : shipsQueue) {
+            for (Ship ship : new ArrayList<>(shipsQueue)) {
                 logStringBuilder.append("Ship with id " + ship.getId() + ", " 
                         + "ship priority " + ship.getPriority() + ", "
                         + "cargo priority " + ship.getCargoPriority() + ", "
