@@ -40,3 +40,6 @@ users.txt
 
 ### Bin files ###
 *.jar
+
+### Log files ###
+*.log
