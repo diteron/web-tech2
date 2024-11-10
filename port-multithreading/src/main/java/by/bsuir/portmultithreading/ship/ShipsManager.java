@@ -24,7 +24,7 @@ public class ShipsManager {
             for (Ship ship : SHIPS) {
                 if (!ship.isWorking()) {
                     try {
-                        Thread.sleep(20);  // Simulate some delay when sending ships
+                        Thread.sleep(10);  // Simulate some delay when sending ships
                     }
                     catch (InterruptedException e) {
                         Thread.currentThread().interrupt();

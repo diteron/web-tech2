@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.PriorityQueue;
 
@@ -43,9 +42,8 @@ public class Port {
                     }
 
                     assignBerth(ship);
+                    printLog();
                 }
-
-                printLog();
             }
         }
 
@@ -107,7 +105,7 @@ public class Port {
 
         private void addWaitingShipsToLog(StringBuilder logStringBuilder) {
             logStringBuilder.append("Ships waiting for berthing:\n");
-            for (Ship ship : new ArrayList<>(shipsQueue)) {
+            for (Ship ship : shipsQueue) {
                 logStringBuilder.append("Ship with id " + ship.getId() + ", " 
                         + "ship priority " + ship.getPriority() + ", "
                         + "cargo priority " + ship.getCargoPriority() + ", "
