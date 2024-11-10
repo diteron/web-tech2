@@ -2,9 +2,17 @@ package by.bsuir.portmultithreading.ship;
 
 import java.util.Random;
 
+/**
+ * Represents a ship that can perform loading or unloading operations at a port berth.
+ * Each ship has a priority, cargo priority, and a specified and actual berthing time.
+ * The ship's priority and cargo priority determine its order in comparison to other ships.
+ */
 public class Ship implements Comparable<Ship> {
     private static int shipsCounter = 0;
 
+    /**
+     * Enum representing the type of operation the ship can perform, either loading or unloading.
+     */    
     public enum Operation {
         LOADING("loading"),
         UNLOADING("unloading");
@@ -26,15 +34,7 @@ public class Ship implements Comparable<Ship> {
     private final static int MIN_PRIORITY = 0;
     private final static int MAX_PRIORITY = 5;
 
-    /**
-     * Ship priority ({@code 0-10})
-     */
     private int priority;
-
-    /**
-     * Ship cargo priority ({@code 0-10}). The cargo priority is more important
-     * compared to the ship priority
-     */
     private int cargoPriority;
 
     private Operation operation;
@@ -51,16 +51,19 @@ public class Ship implements Comparable<Ship> {
 
     private final static Random RANDOM_GENERATOR = new Random();
 
+    /**
+     * Constructs a new {@code Ship} with a unique ID, random priority, and random cargo priority.
+     */
     public Ship() {
         id = ++shipsCounter;
         setRandomPriority();
         setRandomCargoPriority();
     }
 
-    private void setRandomPriority() {
-        priority = RANDOM_GENERATOR.nextInt(MAX_PRIORITY + 1);
-    }
-
+    /**
+     * Generates a random task for the ship, setting its operation, cargo priority,
+     * number of containers, specified berthing time, and actual berthing time.
+     */    
     public void createRandomTask() {
         setRandomOperation();
         setRandomCargoPriority();
@@ -74,6 +77,10 @@ public class Ship implements Comparable<Ship> {
         operation = tmp == true ? Operation.LOADING : Operation.UNLOADING;
     }
 
+    private void setRandomPriority() {
+        priority = RANDOM_GENERATOR.nextInt(MAX_PRIORITY + 1);
+    }
+    
     private void setRandomCargoPriority() {
         cargoPriority = RANDOM_GENERATOR.nextInt(MAX_PRIORITY + 1);
     }
@@ -117,14 +124,14 @@ public class Ship implements Comparable<Ship> {
     }
 
     /**
-     * @return specified berthing time in ms
+     * @return specified berthing time in milliseconds
      */
     public long getSpecifiedBerthingTime() {
         return specifiedBerthingTime / 1000;
     }
 
     /**
-     * @return actual berthing time in ms
+     * @return actual berthing time in milliseconds
      */
     public long getActualBerthingTime() {
         return actualBerthingTime / 1000;
@@ -138,18 +145,33 @@ public class Ship implements Comparable<Ship> {
         isWorking = false;
     }
 
+    /**
+     * Increases the ship's priority by one, up to a maximum of {@code MAX_PRIORITY}.
+     */    
     public void increasePriority() {
         if (priority < MAX_PRIORITY) {
             ++priority;
         }
     }
 
+    /**
+     * Decreases the ship's priority by one, down to a minimum of {@code MIN_PRIORITY}.
+     */    
     public void decreasePriority() {
         if (priority > MIN_PRIORITY) {
             --priority;
         }
     }
 
+    /**
+     * Compares this ship with another ship based on the sum of their cargo priority
+     * and ship priority. A ship with a higher combined priority is considered
+     * to have a higher priority.
+     *
+     * @param other the other ship to compare with
+     * @return a negative integer, zero, or a positive integer as this ship is less than,
+     * equal to, or greater than the specified ship
+     */    
     @Override
     public int compareTo(Ship other) {
         return Integer.compare(this.cargoPriority + this.priority, other.cargoPriority + other.priority);

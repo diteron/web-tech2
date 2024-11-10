@@ -11,7 +11,68 @@ import java.util.PriorityQueue;
 
 import by.bsuir.portmultithreading.ship.Ship;
 
+/**
+ * Represents a port that manages berths for ships to perform loading and unloading operations.
+ * <p>
+ * The {@code Port} class handles a queue of ships waiting for berthing, assigns ships to available berths,
+ * and logs information about port operations. A background thread processes ships and manages berthing tasks.
+ * </p>
+ */
 public class Port {
+    private final Warehouse WAREHOUSE = new Warehouse();
+    private final int NUMBER_OF_BERTHS;
+    private final Berth[] BERTHS;
+
+    private PriorityQueue<Ship> shipsQueue = new PriorityQueue<>(Collections.reverseOrder());
+    private static final Object QUEUE_LOCK = new Object();
+
+    /**
+     * Constructs a new {@code Port} with the specified number of berths.
+     * Each berth is initialized with a reference to the port's warehouse.
+     *
+     * @param numberOfBerths the number of berths available at the port
+     */
+    public Port(int numberOfBerths) {
+        NUMBER_OF_BERTHS = numberOfBerths;
+        BERTHS = new Berth[NUMBER_OF_BERTHS];
+        for (int i = 0; i < NUMBER_OF_BERTHS; ++i) {
+            BERTHS[i] = new Berth(WAREHOUSE);
+        }
+    }
+
+    /**
+     * Starts processing ships at the port.
+     * <p>
+     * This method launches a background thread that continuously monitors the ship queue
+     * and assigns ships to available berths as they arrive.
+     * </p>
+     */
+    public void startProcessingShips() {
+        new ProcessingThread().start();
+    }
+
+    /**
+     * Adds a ship to the port's processing queue.
+     * <p>
+     * This method places the ship in the queue of waiting ships and notifies the processing thread.
+     * </p>
+     *
+     * @param ship the {@code Ship} instance to be added to the queue for processing
+     */
+    public void addShip(Ship ship) {
+        synchronized (QUEUE_LOCK) {
+            shipsQueue.offer(ship);
+            QUEUE_LOCK.notify();
+        }
+    }
+
+    /**
+     * Inner class responsible for processing ships waiting to berth at the port.
+     * <p>
+     * The {@code ProcessingThread} monitors the ship queue, assigns available berths to incoming ships, 
+     * and logs the port's operations to a file at regular intervals.
+     * </p>
+     */
     private class ProcessingThread extends Thread {
         private final static DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
         private final static int LOGGING_PERIOD_SEC = 5;  
@@ -28,7 +89,14 @@ public class Port {
                 throw new RuntimeException("Failed to create file: " + LOG_FILE.getName(), e);
             }
         }
-
+        
+        /**
+         * Runs the processing thread.
+         * <p>
+         * The thread continuously checks for waiting ships, assigns berths if available, and logs port activity.
+         * If a ship requires loading and the warehouse lacks sufficient goods, it triggers an order for more goods.
+         * </p>
+         */
         @Override
         public void run() {
             while (true) {
@@ -49,6 +117,12 @@ public class Port {
             }
         }
 
+        /**
+         * Waits until there are ships in the queue to process.
+         * <p>
+         * The method blocks until a ship arrives in the queue, resuming only when notified by another thread.
+         * </p>
+         */
         private void waitForShips() {
             while (shipsQueue.isEmpty()) {
                 try {
@@ -60,6 +134,14 @@ public class Port {
             }
         }
 
+        /**
+         * Assigns a ship to the first available berth.
+         * <p>
+         * If all berths are occupied, the method waits briefly and rechecks availability.
+         * </p>
+         *
+         * @param ship the {@code Ship} to be assigned to a berth
+         */
         private void assignBerth(Ship ship) {
             while (true) {
                 for (Berth berth : BERTHS) {
@@ -78,6 +160,12 @@ public class Port {
             }
         }
 
+        /**
+         * Logs port activities to a file at a regular interval.
+         * <p>
+         * The log includes the status of waiting ships, the berths, and the number of goods in the warehouse.
+         * </p>
+         */
         private void printLog() {
             LocalTime currentTime = LocalTime.now();
             if (currentTime.toSecondOfDay() >= timeOfLastLog.toSecondOfDay() + LOGGING_PERIOD_SEC) {
@@ -93,6 +181,14 @@ public class Port {
             }
         }
 
+        /**
+         * Builds a log string with information about the current state of the port.
+         * <p>
+         * The log includes the total number of goods in the warehouse, waiting ships, and the status of berths.
+         * </p>
+         *
+         * @return a {@code String} representing the log message
+         */
         private String createLogString() {
             StringBuilder logStringBuilder = new StringBuilder();
 
@@ -133,32 +229,6 @@ public class Port {
                     logStringBuilder.append("Berth with id " + berth.getId() + " is free\n"); 
                 }
             }
-        }
-    }
-
-    private final Warehouse WAREHOUSE = new Warehouse();
-    private final int NUMBER_OF_BERTHS;
-    private final Berth[] BERTHS;
-
-    private PriorityQueue<Ship> shipsQueue = new PriorityQueue<>(Collections.reverseOrder());
-    private static final Object QUEUE_LOCK = new Object();
-
-    public Port(int numberOfBerths) {
-        NUMBER_OF_BERTHS = numberOfBerths;
-        BERTHS = new Berth[NUMBER_OF_BERTHS];
-        for (int i = 0; i < NUMBER_OF_BERTHS; ++i) {
-            BERTHS[i] = new Berth(WAREHOUSE);
-        }
-    }
-
-    public void startProcessingShips() {
-        new ProcessingThread().start();
-    }
-
-    public void addShip(Ship ship) {
-        synchronized (QUEUE_LOCK) {
-            shipsQueue.offer(ship);
-            QUEUE_LOCK.notify();
         }
     }
 }
