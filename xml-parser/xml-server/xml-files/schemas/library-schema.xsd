@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="library">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="authors" type="AuthorsList"/>
+                <xs:element name="publishers" type="PublishersList"/>
+                <xs:element name="books" type="BooksList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="BooksList">
+        <xs:sequence>
+            <xs:element name="book" maxOccurs="unbounded" type="BookType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AuthorsList">
+        <xs:sequence>
+            <xs:element name="author" maxOccurs="unbounded" type="AuthorType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PublishersList">
+        <xs:sequence>
+            <xs:element name="publisher" maxOccurs="unbounded" type="PublisherType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BookType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="year" type="xs:integer"/>
+            <xs:element name="genre" type="GenreType"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="authorId" type="xs:IDREF" use="required"/>
+        <xs:attribute name="publisherId" type="xs:IDREF" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="AuthorType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="birthYear" type="xs:integer"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="PublisherType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="AddressType"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="AddressType">
+        <xs:sequence>
+            <xs:element name="city" type="xs:string"/>
+            <xs:element name="country" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="GenreType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Fiction"/>
+            <xs:enumeration value="Non-Fiction"/>
+            <xs:enumeration value="Science"/>
+            <xs:enumeration value="History"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

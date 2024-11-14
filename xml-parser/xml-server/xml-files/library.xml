@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="schemas/library-schema.xsd">
+    <authors>
+        <author id="a-1">
+            <name>John Doe</name>
+            <birthYear>1975</birthYear>
+        </author>
+    </authors>
+
+    <publishers>
+        <publisher id="p-1">
+            <name>Example Publisher</name>
+            <address>
+                <city>New York</city>
+                <country>USA</country>
+            </address>
+        </publisher>
+    </publishers>
+    
+    <books>
+        <book id="b-1" authorId="a-1" publisherId="p-1">
+            <title>Example Book</title>
+            <year>2020</year>
+            <genre>Fiction</genre>
+        </book>
+    </books>
+</library>
