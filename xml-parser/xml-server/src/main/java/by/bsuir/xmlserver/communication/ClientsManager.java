@@ -17,6 +17,7 @@ public class ClientsManager {
 
     public void startProcessing() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server is started on port " + PORT);
             while (true) {
                 try (Socket clientSocket = serverSocket.accept();
                         ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
