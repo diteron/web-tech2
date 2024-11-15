@@ -1,4 +1,4 @@
-package by.bsuir.xmlclient.entity;
+package by.bsuir.lib.entity;
 
 import java.io.Serializable;
 
@@ -9,6 +9,12 @@ public class Publisher implements Serializable {
     public Publisher(String name, Address address) {
         this.name = name;
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "  Name: " + name + ",\n" 
+                + "  Address: " + address;
     }
 
     public String getName() {
@@ -27,13 +33,18 @@ public class Publisher implements Serializable {
         this.address = address;
     }
 
-    public class Address implements Serializable {
+    public static class Address implements Serializable {
         private String city;
-        private String county;
+        private String country;
         
         public Address(String city, String county) {
             this.city = city;
-            this.county = county;
+            this.country = county;
+        }
+
+        @Override
+        public String toString() {
+            return city + ", " + country;
         }
 
         public String getCity() {
@@ -44,12 +55,12 @@ public class Publisher implements Serializable {
             this.city = city;
         }
 
-        public String getCounty() {
-            return county;
+        public String getCountry() {
+            return country;
         }
 
-        public void setCounty(String county) {
-            this.county = county;
+        public void setCountry(String county) {
+            this.country = county;
         }
     }
 }

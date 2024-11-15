@@ -1,4 +1,4 @@
-package by.bsuir.xmlserver.entity;
+package by.bsuir.lib.entity;
 
 import java.io.Serializable;
 
@@ -9,6 +9,12 @@ public class Author implements Serializable {
     public Author(String name, Integer yearOfBirth) {
         this.name = name;
         this.yearOfBirth = yearOfBirth;
+    }
+
+    @Override
+    public String toString() {
+        return "  Name: " + name + ",\n" 
+                + "  Year of birth: " + yearOfBirth;
     }
 
     public String getName() {

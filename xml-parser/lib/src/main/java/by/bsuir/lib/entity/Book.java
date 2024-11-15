@@ -1,4 +1,4 @@
-package by.bsuir.xmlserver.entity;
+package by.bsuir.lib.entity;
 
 import java.io.Serializable;
 
@@ -15,6 +15,15 @@ public class Book implements Serializable {
         this.genre = genre;
         this.author = author;
         this.publisher = publisher;
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + ",\n" 
+                + "Year: " + year + ",\n"
+                + "Genre: " + genre + ",\n"
+                + "Author:\n" + author + ",\n"
+                + "Publisher:\n" + publisher;
     }
 
     public String getTitle() {
