@@ -2,8 +2,10 @@ plugins {
     id 'application'
 }
 
-group = 'by.bsuir.xmlparser'
-version = '0.0.1-SNAPSHOT'
+dependencies {
+    implementation project(':common')
+}
+
 
 java {
     toolchain {
@@ -12,29 +14,13 @@ java {
 }
 
 jar {
+    mustRunAfter(':common:jar')
     manifest {
         attributes(
             'Main-Class': 'by.bsuir.xmlparser.server.Application'
         )
     }
-    
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation project(':common')
-}
-
-// testing {
-//     suites {
-//         test {
-//             useJUnitJupiter('5.11.3')
-//         }
-//     }
-// }

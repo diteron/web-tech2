@@ -2,26 +2,8 @@ plugins {
     id 'java-library'
 }
 
-group = 'by.bsuir.xmlparser'
-version = '0.0.1-SNAPSHOT'
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(23)
     }
 }
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-}
-
-// testing {
-//     suites {
-//         test {
-//             useJUnitJupiter('5.11.3')
-//         }
-//     }
-// }
