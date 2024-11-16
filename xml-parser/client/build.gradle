@@ -13,7 +13,7 @@ java {
 }
 
 jar {
-    mustRunAfter(':common:jar')
+    mustRunAfter ':common:jar'
     manifest {
         attributes(
             'Main-Class': 'by.bsuir.xmlparser.client.Application'
@@ -23,9 +23,9 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     doLast {
-        project.copy {
-            from archivePath
-            into project.rootDir
+        copy {
+            from archiveFile
+            into rootDir
         }
     }
 }
