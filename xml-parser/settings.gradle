@@ -1,5 +1,5 @@
 rootProject.name = 'xml-parser'
 
-include 'lib'
-include 'xml-client'
-include 'xml-server'
+include 'common'
+include 'client'
+include 'server'
