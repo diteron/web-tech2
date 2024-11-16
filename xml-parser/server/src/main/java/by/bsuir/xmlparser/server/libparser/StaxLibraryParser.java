@@ -51,13 +51,16 @@ public class StaxLibraryParser implements LibraryParser {
             }
         }
         catch (FileNotFoundException e) {
-            throw new RuntimeException("File '" + FILE_NAME + "' not found", e);
+            System.out.println("File '" + FILE_NAME + "' not found:");
+            e.printStackTrace();
         }
         catch (IOException e) {
-            throw new RuntimeException("Error when reading file '" + FILE_NAME + "'", e);
+            System.out.println("Error when reading file '" + FILE_NAME + "':");
+            e.printStackTrace();
         }
         catch (XMLStreamException e) {
-            throw new RuntimeException("Error processing xml in file '" + FILE_NAME + "'", e);
+            System.out.println("Error processing xml in file '" + FILE_NAME + "':");
+            e.printStackTrace();
         }
 
         return new BooksList(books);
