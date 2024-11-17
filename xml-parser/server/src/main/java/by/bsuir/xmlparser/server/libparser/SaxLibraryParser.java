@@ -20,18 +20,16 @@ import by.bsuir.xmlparser.common.entity.BooksList;
 import by.bsuir.xmlparser.common.entity.Publisher;
 
 public class SaxLibraryParser implements LibraryParser {
-    private List<Book> books = new ArrayList<>();
+    private final List<Book> BOOKS = new ArrayList<>();
 
     private final String FILE_NAME;
-    private final SAXParserFactory SAX_PARSER_FACTORY;
+    private final SAXParserFactory SAX_PARSER_FACTORY = SAXParserFactory.newInstance();
     private final SAXParser SAX_PARSER;
-    private final LibraryHandler LIBRARY_HANDLER;
+    private final LibraryHandler LIBRARY_HANDLER = new LibraryHandler();
     
     public SaxLibraryParser(String fileName) {
         FILE_NAME = fileName;
-        SAX_PARSER_FACTORY = SAXParserFactory.newInstance();
         SAX_PARSER_FACTORY.setNamespaceAware(true);
-        LIBRARY_HANDLER = new LibraryHandler();
         
         try {
             SAX_PARSER = SAX_PARSER_FACTORY.newSAXParser();
@@ -55,7 +53,7 @@ public class SaxLibraryParser implements LibraryParser {
             e.printStackTrace();
         }
         
-        return new BooksList(books);
+        return new BooksList(BOOKS);
     }
 
 
@@ -68,8 +66,8 @@ public class SaxLibraryParser implements LibraryParser {
         private Publisher currentPublisher;
         private Book currentBook;
 
-        private Map<String, Author> authorsMap = new HashMap<>();
-        private Map<String, Publisher> publishersMap = new HashMap<>();
+        private final Map<String, Author> AUTHORS_MAP = new HashMap<>();
+        private final Map<String, Publisher> PUBLISHERS_MAP = new HashMap<>();
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -91,7 +89,7 @@ public class SaxLibraryParser implements LibraryParser {
                     String authorId = attributes.getValue("authorId");
                     String publisherId = attributes.getValue("publisherId");
                     currentBook = new Book(null, null, null,
-                            authorsMap.get(authorId), publishersMap.get(publisherId));
+                            AUTHORS_MAP.get(authorId), PUBLISHERS_MAP.get(publisherId));
                     break;
             }
         }
@@ -121,13 +119,13 @@ public class SaxLibraryParser implements LibraryParser {
         public void endElement(String uri, String localName, String qName) throws SAXException {
             switch (qName) {
                 case "author":
-                    authorsMap.put(currentEntityId, currentAuthor);
+                    AUTHORS_MAP.put(currentEntityId, currentAuthor);
                     break;
                 case "publisher":
-                    publishersMap.put(currentEntityId, currentPublisher);
+                    PUBLISHERS_MAP.put(currentEntityId, currentPublisher);
                     break;
                 case "book":
-                    books.add(currentBook);
+                    BOOKS.add(currentBook);
                     break;        
                 default:
                     break;
