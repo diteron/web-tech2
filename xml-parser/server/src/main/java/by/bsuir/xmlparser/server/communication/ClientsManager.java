@@ -8,6 +8,8 @@ import java.net.Socket;
 
 import by.bsuir.xmlparser.common.ParserType;
 import by.bsuir.xmlparser.common.entity.BooksList;
+import by.bsuir.xmlparser.server.libparser.DomLibraryParser;
+import by.bsuir.xmlparser.server.libparser.JdomLibraryParser;
 import by.bsuir.xmlparser.server.libparser.LibraryParser;
 import by.bsuir.xmlparser.server.libparser.SaxLibraryParser;
 import by.bsuir.xmlparser.server.libparser.StaxLibraryParser;
@@ -29,7 +31,7 @@ public class ClientsManager {
                     BooksList booksList = parseBooks(parserType);
                     out.writeObject(booksList);
                     
-                    System.out.println("Books is sent to the client");
+                    System.out.println("Books is sent to the client\n");
                 } 
                 catch (IOException | ClassNotFoundException e) {
                     System.out.println("Failed to process a client:");
@@ -47,6 +49,7 @@ public class ClientsManager {
         BooksList booksList = null;
         LibraryParser libraryParser;
 
+        long startTime = System.nanoTime();
         switch (parserType) {
             case SAX:
                 libraryParser = new SaxLibraryParser(FILE_PATH);
@@ -57,10 +60,21 @@ public class ClientsManager {
                 booksList = libraryParser.parse();
                 break;
             case DOM:
+                libraryParser = new DomLibraryParser(FILE_PATH);
+                booksList = libraryParser.parse();
+                break;
+            case JDOM:
+                libraryParser = new JdomLibraryParser(FILE_PATH);
+                booksList = libraryParser.parse();
                 break;
             default:
                 break;
         }
+
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
+        double elapsedMillis = elapsedTime / 1_000_000.0;
+        System.out.println("Parsing completed in " + elapsedMillis + " ms");
 
         return booksList;
     }

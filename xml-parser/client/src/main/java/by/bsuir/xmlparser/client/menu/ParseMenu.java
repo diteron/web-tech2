@@ -34,6 +34,7 @@ public class ParseMenu {
         System.out.println("1. SAX");
         System.out.println("2. StAX");
         System.out.println("3. DOM");
+        System.out.println("4. JDOM");
         System.out.println("0. Exit");
         System.out.print("Choose an option: ");
     }
@@ -47,8 +48,11 @@ public class ParseMenu {
                 handleParse(ParserType.STAX);
                 break;
             case 3:
-                //handleParse(ParserType.DOM);
-                break;            
+                handleParse(ParserType.DOM);
+                break;        
+            case 4:
+                handleParse(ParserType.JDOM);
+                break;        
             case 0:
                 System.out.println("Returning to the client menu...");
                 exit = true;

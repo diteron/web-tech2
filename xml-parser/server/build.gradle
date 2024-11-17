@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation project(':common')
+    implementation 'org.jdom:jdom2:2.0.6.1'
 }
 
 java {
