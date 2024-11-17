@@ -4,18 +4,18 @@ import java.util.Scanner;
 
 public class ClientMenu {
     private boolean exit = false;
-    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in);
 
-    private static final ParseMenu PARSE_MENU = new ParseMenu(SCANNER);
+    private static final ParseMenu parseMenu = new ParseMenu(scanner);
 
     public void start() {
         while (!exit) {
             displayMenu();
-            int choice = SCANNER.nextInt();
-            SCANNER.nextLine();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
             handleChoice(choice);
         }
-        SCANNER.close();
+        scanner.close();
     }
 
     private void displayMenu() {
@@ -40,6 +40,6 @@ public class ClientMenu {
     }
 
     private void handleParseFile() {
-        PARSE_MENU.start();
+        parseMenu.start();
     }
 }

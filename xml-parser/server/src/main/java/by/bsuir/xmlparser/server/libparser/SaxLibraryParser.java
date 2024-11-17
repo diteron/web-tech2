@@ -20,19 +20,19 @@ import by.bsuir.xmlparser.common.entity.BooksList;
 import by.bsuir.xmlparser.common.entity.Publisher;
 
 public class SaxLibraryParser implements LibraryParser {
-    private final List<Book> BOOKS = new ArrayList<>();
+    private final List<Book> books = new ArrayList<>();
 
-    private final String FILE_NAME;
-    private final SAXParserFactory SAX_PARSER_FACTORY = SAXParserFactory.newInstance();
-    private final SAXParser SAX_PARSER;
-    private final LibraryHandler LIBRARY_HANDLER = new LibraryHandler();
+    private final String fileName;
+    private final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    private final SAXParser saxParser;
+    private final LibraryHandler libraryHandler = new LibraryHandler();
     
     public SaxLibraryParser(String fileName) {
-        FILE_NAME = fileName;
-        SAX_PARSER_FACTORY.setNamespaceAware(true);
+        this.fileName = fileName;
+        saxParserFactory.setNamespaceAware(true);
         
         try {
-            SAX_PARSER = SAX_PARSER_FACTORY.newSAXParser();
+            saxParser = saxParserFactory.newSAXParser();
         }
         catch (ParserConfigurationException | SAXException e) {
             throw new RuntimeException("Failed to create SAX parser", e);
@@ -42,18 +42,18 @@ public class SaxLibraryParser implements LibraryParser {
     @Override
     public BooksList parse()  {
         try {
-            SAX_PARSER.parse(FILE_NAME, LIBRARY_HANDLER);
+            saxParser.parse(fileName, libraryHandler);
         }
         catch (SAXException e) {
-            System.out.println("Error processing xml in file '" + FILE_NAME + "':");
+            System.out.println("Error processing xml in file '" + fileName + "':");
             e.printStackTrace();
         }
         catch (IOException e) {
-            System.out.println("Error when reading file '" + FILE_NAME + "':");
+            System.out.println("Error when reading file '" + fileName + "':");
             e.printStackTrace();
         }
         
-        return new BooksList(BOOKS);
+        return new BooksList(books);
     }
 
 
@@ -66,8 +66,8 @@ public class SaxLibraryParser implements LibraryParser {
         private Publisher currentPublisher;
         private Book currentBook;
 
-        private final Map<String, Author> AUTHORS_MAP = new HashMap<>();
-        private final Map<String, Publisher> PUBLISHERS_MAP = new HashMap<>();
+        private final Map<String, Author> authorsMap = new HashMap<>();
+        private final Map<String, Publisher> publishersMap = new HashMap<>();
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -89,7 +89,7 @@ public class SaxLibraryParser implements LibraryParser {
                     String authorId = attributes.getValue("authorId");
                     String publisherId = attributes.getValue("publisherId");
                     currentBook = new Book(null, null, null,
-                            AUTHORS_MAP.get(authorId), PUBLISHERS_MAP.get(publisherId));
+                            authorsMap.get(authorId), publishersMap.get(publisherId));
                     break;
             }
         }
@@ -119,13 +119,13 @@ public class SaxLibraryParser implements LibraryParser {
         public void endElement(String uri, String localName, String qName) throws SAXException {
             switch (qName) {
                 case "author":
-                    AUTHORS_MAP.put(currentEntityId, currentAuthor);
+                    authorsMap.put(currentEntityId, currentAuthor);
                     break;
                 case "publisher":
-                    PUBLISHERS_MAP.put(currentEntityId, currentPublisher);
+                    publishersMap.put(currentEntityId, currentPublisher);
                     break;
                 case "book":
-                    BOOKS.add(currentBook);
+                    books.add(currentBook);
                     break;        
                 default:
                     break;

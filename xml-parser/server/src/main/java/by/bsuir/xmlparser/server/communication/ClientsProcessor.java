@@ -16,7 +16,7 @@ import by.bsuir.xmlparser.server.libparser.StaxLibraryParser;
 
 public class ClientsProcessor {
     private final static int PORT = 24110;
-    private final static String FILE_PATH = System.getProperty("user.dir") + "/xml-files/library.xml";
+    private final static String filePath = System.getProperty("user.dir") + "/xml-files/library.xml";
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -52,19 +52,19 @@ public class ClientsProcessor {
         long startTime = System.nanoTime();
         switch (parserType) {
             case SAX:
-                libraryParser = new SaxLibraryParser(FILE_PATH);
+                libraryParser = new SaxLibraryParser(filePath);
                 booksList = libraryParser.parse();
                 break;
             case STAX:
-                libraryParser = new StaxLibraryParser(FILE_PATH);
+                libraryParser = new StaxLibraryParser(filePath);
                 booksList = libraryParser.parse();
                 break;
             case DOM:
-                libraryParser = new DomLibraryParser(FILE_PATH);
+                libraryParser = new DomLibraryParser(filePath);
                 booksList = libraryParser.parse();
                 break;
             case JDOM:
-                libraryParser = new JdomLibraryParser(FILE_PATH);
+                libraryParser = new JdomLibraryParser(filePath);
                 booksList = libraryParser.parse();
                 break;
             default:

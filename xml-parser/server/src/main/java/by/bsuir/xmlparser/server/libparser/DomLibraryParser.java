@@ -21,21 +21,21 @@ import by.bsuir.xmlparser.common.entity.BooksList;
 import by.bsuir.xmlparser.common.entity.Publisher;
 
 public class DomLibraryParser implements LibraryParser {
-    private final String FILE_NAME;
+    private final String fileName;
 
-    private final Map<String, Author> AUTHORS_MAP = new HashMap<>();
-    private final Map<String, Publisher> PUBLISHERS_MAP = new HashMap<>();
-    private final List<Book> BOOKS = new ArrayList<>();
+    private final Map<String, Author> authorsMap = new HashMap<>();
+    private final Map<String, Publisher> publishersMap = new HashMap<>();
+    private final List<Book> books = new ArrayList<>();
 
-    private final DocumentBuilderFactory DOC_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
-    private final DocumentBuilder DOC_BUILDER;
+    private final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+    private final DocumentBuilder dockBuilder;
 
     
     public DomLibraryParser(String fileName) {
-        FILE_NAME = fileName;
+        this.fileName = fileName;
 
         try {
-            DOC_BUILDER = DOC_BUILDER_FACTORY.newDocumentBuilder();
+            dockBuilder = docBuilderFactory.newDocumentBuilder();
         }
         catch (ParserConfigurationException e) {
             throw new RuntimeException("Failed to create DOM parser", e);
@@ -45,21 +45,21 @@ public class DomLibraryParser implements LibraryParser {
     @Override
     public BooksList parse() {
         try {
-            Document document = DOC_BUILDER.parse(FILE_NAME);
+            Document document = dockBuilder.parse(fileName);
             parseAuthors(document);
             parsePublishers(document);
             parseBooks(document);
         }
         catch (SAXException e) {
-            System.out.println("Error processing xml in file '" + FILE_NAME + "':");
+            System.out.println("Error processing xml in file '" + fileName + "':");
             e.printStackTrace();
         }
         catch (IOException e) {
-            System.out.println("Error when reading file '" + FILE_NAME + "':");
+            System.out.println("Error when reading file '" + fileName + "':");
             e.printStackTrace();
         }
 
-        return new BooksList(BOOKS);
+        return new BooksList(books);
     }
 
     private void parseAuthors(Document document) {
@@ -70,7 +70,7 @@ public class DomLibraryParser implements LibraryParser {
             String name = getElementTextContent(authorElement, "name");
             String birthYear = getElementTextContent(authorElement, "birthYear");
 
-            AUTHORS_MAP.put(id, new Author(name, birthYear));
+            authorsMap.put(id, new Author(name, birthYear));
         }
     }
 
@@ -83,7 +83,7 @@ public class DomLibraryParser implements LibraryParser {
             String city = getElementTextContent(publisherElement, "city");
             String country = getElementTextContent(publisherElement, "country");
             
-            PUBLISHERS_MAP.put(id, new Publisher(name, new Publisher.Address(city, country)));
+            publishersMap.put(id, new Publisher(name, new Publisher.Address(city, country)));
         }
     }
 
@@ -98,8 +98,8 @@ public class DomLibraryParser implements LibraryParser {
             Integer year = Integer.parseInt(getElementTextContent(bookElement, "year"));
             String genre = getElementTextContent(bookElement, "genre");
             
-            BOOKS.add(new Book(title, year, genre,
-                    AUTHORS_MAP.get(authorId), PUBLISHERS_MAP.get(publisherId)));
+            books.add(new Book(title, year, genre,
+                    authorsMap.get(authorId), publishersMap.get(publisherId)));
         }
     }
 

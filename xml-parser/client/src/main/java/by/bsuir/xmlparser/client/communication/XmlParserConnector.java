@@ -9,15 +9,15 @@ import by.bsuir.xmlparser.common.ParserType;
 import by.bsuir.xmlparser.common.entity.BooksList;
 
 public class XmlParserConnector implements AutoCloseable {
-    private final Socket SOCKET;
+    private final Socket socket;
 
     public XmlParserConnector(String host, int port) throws IOException {
-        SOCKET = new Socket(host, port);
+        socket = new Socket(host, port);
     }
 
     public BooksList parseBooks(ParserType parserType) throws IOException, ClassNotFoundException {
-        try (ObjectOutputStream out = new ObjectOutputStream(SOCKET.getOutputStream());
-                ObjectInputStream in = new ObjectInputStream(SOCKET.getInputStream())) {
+        try (ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
             setParserTypeOnServer(out, parserType);
             BooksList books = recieveBooksFromServer(in);
             return books;
@@ -34,8 +34,8 @@ public class XmlParserConnector implements AutoCloseable {
 
     @Override
     public void close() throws IOException {
-        if (SOCKET != null && !SOCKET.isClosed()) {
-            SOCKET.close();
+        if (socket != null && !socket.isClosed()) {
+            socket.close();
         }
     }
 }

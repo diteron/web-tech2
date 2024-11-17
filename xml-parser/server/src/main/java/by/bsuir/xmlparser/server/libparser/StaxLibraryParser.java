@@ -20,19 +20,19 @@ import by.bsuir.xmlparser.common.entity.Publisher;
 import by.bsuir.xmlparser.common.entity.Publisher.Address;
 
 public class StaxLibraryParser implements LibraryParser {
-    private final String FILE_NAME;
+    private final String fileName;
 
-    private final Map<String, Author> AUTHORS_MAP = new HashMap<>();
-    private final Map<String, Publisher> PUBLISHERS_MAP = new HashMap<>();
-    private final List<Book> BOOKS = new ArrayList<>();
+    private final Map<String, Author> authorsMap = new HashMap<>();
+    private final Map<String, Publisher> publishersMap = new HashMap<>();
+    private final List<Book> books = new ArrayList<>();
 
     public StaxLibraryParser(String fileName) {
-        FILE_NAME = fileName;
+        this.fileName = fileName;
     }
 
     @Override
     public BooksList parse() {
-        try (FileInputStream fileInputStream = new FileInputStream(FILE_NAME)) {
+        try (FileInputStream fileInputStream = new FileInputStream(fileName)) {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader reader = factory.createXMLStreamReader(fileInputStream);
 
@@ -51,19 +51,19 @@ public class StaxLibraryParser implements LibraryParser {
             }
         }
         catch (FileNotFoundException e) {
-            System.out.println("File '" + FILE_NAME + "' not found:");
+            System.out.println("File '" + fileName + "' not found:");
             e.printStackTrace();
         }
         catch (IOException e) {
-            System.out.println("Error when reading file '" + FILE_NAME + "':");
+            System.out.println("Error when reading file '" + fileName + "':");
             e.printStackTrace();
         }
         catch (XMLStreamException e) {
-            System.out.println("Error processing xml in file '" + FILE_NAME + "':");
+            System.out.println("Error processing xml in file '" + fileName + "':");
             e.printStackTrace();
         }
 
-        return new BooksList(BOOKS);
+        return new BooksList(books);
     }
 
     private void parseAuthors(XMLStreamReader reader) throws XMLStreamException {
@@ -93,7 +93,7 @@ public class StaxLibraryParser implements LibraryParser {
                 switch (currentElement) {
                     case "author":
                         if (!id.isEmpty() && !name.isEmpty() && !birthYear.isEmpty()) {
-                            AUTHORS_MAP.put(id, new Author(name, birthYear));
+                            authorsMap.put(id, new Author(name, birthYear));
                         }
                         break;
                     case "authors":
@@ -135,7 +135,7 @@ public class StaxLibraryParser implements LibraryParser {
                         if (!id.isEmpty() && !name.isEmpty() && !city.isEmpty()
                                 && !country.isEmpty()) {
                             Address address = new Address(city, country);
-                            PUBLISHERS_MAP.put(id, new Publisher(name, address));
+                            publishersMap.put(id, new Publisher(name, address));
                         }
                         break;
                     case "publishers":
@@ -179,8 +179,8 @@ public class StaxLibraryParser implements LibraryParser {
                     case "book":
                         if (!authorId.isEmpty() && !publisherId.isEmpty()
                                 && !title.isEmpty() && !year.isEmpty() && !genre.isEmpty()) {
-                            BOOKS.add(new Book(title, Integer.parseInt(year), genre,
-                                    AUTHORS_MAP.get(authorId), PUBLISHERS_MAP.get(publisherId)));
+                            books.add(new Book(title, Integer.parseInt(year), genre,
+                                    authorsMap.get(authorId), publishersMap.get(publisherId)));
                         }
                         break;
                     case "books":

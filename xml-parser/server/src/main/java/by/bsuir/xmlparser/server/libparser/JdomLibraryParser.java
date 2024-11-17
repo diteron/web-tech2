@@ -17,37 +17,37 @@ import by.bsuir.xmlparser.common.entity.BooksList;
 import by.bsuir.xmlparser.common.entity.Publisher;
 
 public class JdomLibraryParser implements LibraryParser {
-    private final String FILE_NAME;
+    private final String fileName;
 
-    private final Map<String, Author> AUTHORS_MAP = new HashMap<>();
-    private final Map<String, Publisher> PUBLISHERS_MAP = new HashMap<>();
-    private final List<Book> BOOKS = new ArrayList<>();
+    private final Map<String, Author> authorsMap = new HashMap<>();
+    private final Map<String, Publisher> publishersMap = new HashMap<>();
+    private final List<Book> books = new ArrayList<>();
 
-    private final SAXBuilder SAX_BUILDER = new SAXBuilder();
+    private final SAXBuilder saxBuilder = new SAXBuilder();
     
     public JdomLibraryParser(String fileName) {
-        FILE_NAME = fileName;
+        this.fileName = fileName;
     }
 
     @Override
     public BooksList parse() {
         try {
-            Document document = SAX_BUILDER.build(FILE_NAME);
+            Document document = saxBuilder.build(fileName);
             Element rootElement = document.getRootElement();
             parseAuthors(rootElement);
             parsePublishers(rootElement);
             parseBooks(rootElement);
         }
         catch (JDOMException e) {
-            System.out.println("Error processing xml in file '" + FILE_NAME + "':");
+            System.out.println("Error processing xml in file '" + fileName + "':");
             e.printStackTrace();
         }
         catch (IOException e) {
-            System.out.println("Error when reading file '" + FILE_NAME + "':");
+            System.out.println("Error when reading file '" + fileName + "':");
             e.printStackTrace();
         }
 
-        return new BooksList(BOOKS);
+        return new BooksList(books);
     }
 
     private void parseAuthors(Element rootElement) {
@@ -57,7 +57,7 @@ public class JdomLibraryParser implements LibraryParser {
             String name = authorElement.getChildText("name");
             String birthYear = authorElement.getChildText("birthYear");
 
-            AUTHORS_MAP.put(id, new Author(name, birthYear));
+            authorsMap.put(id, new Author(name, birthYear));
         }
     }
 
@@ -71,7 +71,7 @@ public class JdomLibraryParser implements LibraryParser {
             String city = address.getChildText("city");
             String country = address.getChildText("country");
 
-            PUBLISHERS_MAP.put(id, new Publisher(name, new Publisher.Address(city, country)));
+            publishersMap.put(id, new Publisher(name, new Publisher.Address(city, country)));
         }
     }
 
@@ -85,8 +85,8 @@ public class JdomLibraryParser implements LibraryParser {
             int year = Integer.parseInt(bookElement.getChildText("year"));
             String genre = bookElement.getChildText("genre");
 
-            BOOKS.add(new Book(title, year, genre,
-                    AUTHORS_MAP.get(authorId), PUBLISHERS_MAP.get(publisherId)));
+            books.add(new Book(title, year, genre,
+                    authorsMap.get(authorId), publishersMap.get(publisherId)));
         }
     }
 }

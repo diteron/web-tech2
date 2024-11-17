@@ -9,13 +9,13 @@ import by.bsuir.xmlparser.client.communication.XmlParserConnector;
 
 public class ParseMenu {
     private boolean exit = false;
-    private final Scanner SCANNER;
+    private final Scanner scanner;
 
     private static final String HOST = "localhost";
     private static final int PORT = 24110;
 
     public ParseMenu(Scanner scanner) {
-        SCANNER = scanner;
+        this.scanner = scanner;
     }
 
     public void start() {
@@ -23,8 +23,8 @@ public class ParseMenu {
 
         while (!exit) {
             displayMenu();
-            int choice = SCANNER.nextInt();
-            SCANNER.nextLine();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
             handleChoice(choice);
         }
     }
