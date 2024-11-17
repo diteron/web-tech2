@@ -41,7 +41,7 @@ public class ParseMenu {
     private void handleChoice(int choice) {
         switch (choice) {
             case 1:
-                //handleParse(ParserType.SAX);
+                handleParse(ParserType.SAX);
                 break;
             case 2:
                 handleParse(ParserType.STAX);
@@ -61,7 +61,7 @@ public class ParseMenu {
     private void handleParse(ParserType parserType) {
         try (XmlParserConnector parserConnector = new XmlParserConnector(HOST, PORT)) {
             BooksList booksList = parserConnector.parseBooks(parserType);
-            System.out.println("\nBooks in the xmlparser.commonrary:");
+            System.out.println("\nBooks in the library:");
             booksList.printBooks();
         } 
         catch (ClassNotFoundException | IOException e) {

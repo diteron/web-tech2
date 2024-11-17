@@ -93,7 +93,7 @@ public class StaxLibraryParser implements LibraryParser {
                 switch (currentElement) {
                     case "author":
                         if (!id.isEmpty() && !name.isEmpty() && !birthYear.isEmpty()) {
-                            authorsMap.put(id, new Author(name, Integer.parseInt(birthYear)));
+                            authorsMap.put(id, new Author(name, birthYear));
                         }
                         break;
                     case "authors":

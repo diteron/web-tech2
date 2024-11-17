@@ -42,7 +42,7 @@
     <xs:complexType name="AuthorType">
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="birthYear" type="xs:integer"/>
+            <xs:element name="birthYear" type="xs:string"/>
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID" use="required"/>
     </xs:complexType>
@@ -65,9 +65,9 @@
     <xs:simpleType name="GenreType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Fiction"/>
-            <xs:enumeration value="Non-Fiction"/>
-            <xs:enumeration value="Science"/>
-            <xs:enumeration value="History"/>
+            <xs:enumeration value="Science Fiction"/>
+            <xs:enumeration value="Historical Fiction"/>
+            <xs:enumeration value="Programming"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

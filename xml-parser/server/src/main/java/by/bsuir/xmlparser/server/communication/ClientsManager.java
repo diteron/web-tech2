@@ -9,6 +9,7 @@ import java.net.Socket;
 import by.bsuir.xmlparser.common.ParserType;
 import by.bsuir.xmlparser.common.entity.BooksList;
 import by.bsuir.xmlparser.server.libparser.LibraryParser;
+import by.bsuir.xmlparser.server.libparser.SaxLibraryParser;
 import by.bsuir.xmlparser.server.libparser.StaxLibraryParser;
 
 public class ClientsManager {
@@ -48,6 +49,8 @@ public class ClientsManager {
 
         switch (parserType) {
             case SAX:
+                libraryParser = new SaxLibraryParser(FILE_PATH);
+                booksList = libraryParser.parse();
                 break;
             case STAX:
                 libraryParser = new StaxLibraryParser(FILE_PATH);

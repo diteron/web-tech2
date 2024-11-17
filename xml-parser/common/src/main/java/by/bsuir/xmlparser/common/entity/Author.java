@@ -4,17 +4,17 @@ import java.io.Serializable;
 
 public class Author implements Serializable {
     private String name;
-    private Integer yearOfBirth;
+    private String birthYear;
 
-    public Author(String name, Integer yearOfBirth) {
+    public Author(String name, String birthYear) {
         this.name = name;
-        this.yearOfBirth = yearOfBirth;
+        this.birthYear = birthYear;
     }
 
     @Override
     public String toString() {
         return "  Name: " + name + ",\n" 
-                + "  Year of birth: " + yearOfBirth;
+                + "  Year of birth: " + birthYear;
     }
 
     public String getName() {
@@ -25,11 +25,11 @@ public class Author implements Serializable {
         this.name = name;
     }
 
-    public Integer getYearOfBirth() {
-        return yearOfBirth;
+    public String getBirthYear() {
+        return birthYear;
     }
 
-    public void setYearOfBirth(Integer yearOfBirth) {
-        this.yearOfBirth = yearOfBirth;
+    public void setBirthYear(String birthYear) {
+        this.birthYear = birthYear;
     }
 }

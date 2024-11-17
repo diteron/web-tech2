@@ -1,28 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="schemas/library-schema.xsd">
+    
+    <!-- ===================================  Authors  =================================== -->
     <authors>
-        <author id="a-1">
+        <author id="doe">
             <name>John Doe</name>
             <birthYear>1975</birthYear>
         </author>
+
+        <author id="dostoevsky">
+            <name>Fyodor Dostoevsky</name>
+            <birthYear>1821</birthYear>
+        </author>
+
+        <author id="kesey">
+            <name>Ken Kesey</name>
+            <birthYear>1935</birthYear>
+        </author>
+
+        <author id="salinger">
+            <name>J. D. Salinger</name>
+            <birthYear>1919</birthYear>
+        </author>
+
+        <author id="meyers">
+            <name>Scott Meyers</name>
+            <birthYear>1959</birthYear>
+        </author>
+
+        <author id="tolstoy">
+            <name>Leo Tolstoy</name>
+            <birthYear>1828</birthYear>
+        </author>
+
+        <author id="nabokov">
+            <name>Vladimir Nabokov</name>
+            <birthYear>1899</birthYear>
+        </author>
+
+        <author id="fitzgerald">
+            <name>F. Scott Fitzgerald</name>
+            <birthYear>1896</birthYear>
+        </author>
+
+        <author id="bradbury">
+            <name>Ray Bradbury</name>
+            <birthYear>1920</birthYear>
+        </author>
+
+        <author id="strugatsky_br">
+            <name>Arkady and Boris Strugatsky</name>
+            <birthYear>1925, 1933</birthYear>
+        </author>
+        
+        <author id="orwell">
+            <name>George Orwell</name>
+            <birthYear>1903</birthYear>
+        </author>
     </authors>
 
+    <!-- ===================================  Publishers  =================================== -->
     <publishers>
-        <publisher id="p-1">
-            <name>Example Publisher</name>
+        <publisher id="dover_pub">
+            <name>Dover Publications</name>
             <address>
-                <city>New York</city>
+                <city>Mineola NY</city>
                 <country>USA</country>
+            </address>
+        </publisher>
+
+        <publisher id="berkley">
+            <name>Berkley Books</name>
+            <address>
+                <city>New York City</city>
+                <country>USA</country>
+            </address>
+        </publisher>
+
+        <publisher id="back_bay">
+            <name>Back Bay Books</name>
+            <address>
+                <city>New York City</city>
+                <country>USA</country>
+            </address>
+        </publisher>
+
+        <publisher id="oreilly">
+            <name>O'Reilly Media</name>
+            <address>
+                <city>Newton MA</city>
+                <country>USA</country>
+            </address>
+        </publisher>
+
+        <publisher id="vintage">
+            <name>Vintage Books</name>
+            <address>
+                <city>New York City</city>
+                <country>USA</country>
+            </address>
+        </publisher>
+        
+        <publisher id="gollancz">
+            <name>Gollancz</name>
+            <address>
+                <city>London</city>
+                <country>UK</country>
             </address>
         </publisher>
     </publishers>
     
+    <!-- ===================================  Books  =================================== -->
     <books>
-        <book id="b-1" authorId="a-1" publisherId="p-1">
-            <title>Example Book</title>
-            <year>2020</year>
+        <book id="b-1" authorId="tolstoy" publisherId="dover_pub">
+            <title>Crime and Punishment</title>
+            <year>2001</year>
             <genre>Fiction</genre>
+        </book>
+
+        <book id="b-2" authorId="kesey" publisherId="berkley">
+            <title>One Flew Over the Cuckoo's Nest</title>
+            <year>1963</year>
+            <genre>Fiction</genre>
+        </book>
+
+        <book id="b-3" authorId="salinger" publisherId="berkley">
+            <title>The Catcher in the Rye</title>
+            <year>2001</year>
+            <genre>Fiction</genre>
+        </book>
+
+        <book id="b-4" authorId="meyers" publisherId="oreilly">
+            <title>Effective Modern C++</title>
+            <year>2014</year>
+            <genre>Programming</genre>
+        </book>
+
+        <book id="b-5" authorId="tolstoy" publisherId="vintage">
+            <title>War and Peace</title>
+            <year>2001</year>
+            <genre>Historical Fiction</genre>
+        </book>
+
+        <book id="b-6" authorId="nabokov" publisherId="vintage">
+            <title>Pale Fire</title>
+            <year>1988</year>
+            <genre>Fiction</genre>
+        </book>
+
+        <book id="b-7" authorId="strugatsky_br" publisherId="gollancz">
+            <title>Roadside Picnic</title>
+            <year>2001</year>
+            <genre>Science Fiction</genre>
         </book>
     </books>
 </library>
