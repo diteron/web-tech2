@@ -14,11 +14,11 @@ import by.bsuir.xmlparser.server.libparser.LibraryParser;
 import by.bsuir.xmlparser.server.libparser.SaxLibraryParser;
 import by.bsuir.xmlparser.server.libparser.StaxLibraryParser;
 
-public class ClientsManager {
+public class ClientsProcessor {
     private final static int PORT = 24110;
     private final static String FILE_PATH = System.getProperty("user.dir") + "/xml-files/library.xml";
 
-    public void startProcessing() {
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("Server is started on port " + PORT);
             while (true) {
