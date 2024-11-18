@@ -113,7 +113,7 @@
     
     <!-- ===================================  Books  =================================== -->
     <books>
-        <book id="b-1" authorId="tolstoy" publisherId="dover_pub">
+        <book id="b-1" authorId="dostoevsky" publisherId="dover_pub">
             <title>Crime and Punishment</title>
             <year>2001</year>
             <genre>Fiction</genre>
