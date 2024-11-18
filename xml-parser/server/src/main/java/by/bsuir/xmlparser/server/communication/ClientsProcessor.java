@@ -25,13 +25,13 @@ public class ClientsProcessor {
                 try (Socket clientSocket = serverSocket.accept();
                         ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
                         ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
-                    System.out.println("New client is connected");
+                    System.out.println("\nNew client is connected");
 
                     ParserType parserType = (ParserType) in.readObject();
                     BooksList booksList = parseBooks(parserType);
                     out.writeObject(booksList);
                     
-                    System.out.println("Books is sent to the client\n");
+                    System.out.println("Books is sent to the client");
                 } 
                 catch (IOException | ClassNotFoundException e) {
                     System.out.println("Failed to process a client:");
@@ -74,7 +74,7 @@ public class ClientsProcessor {
         long endTime = System.nanoTime();
         long elapsedTime = endTime - startTime;
         double elapsedMillis = elapsedTime / 1_000_000.0;
-        System.out.println("Parsing completed in " + elapsedMillis + " ms");
+        System.out.printf("Parsing using %s completed in %.2f ms\n", parserType, elapsedMillis);
 
         return booksList;
     }
