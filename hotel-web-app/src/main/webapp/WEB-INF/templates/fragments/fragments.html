@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="../../../css/styles.css" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="navbar-container" th:fragment="navbar">
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="/hotel-web-app-0.0.1-SNAPSHOT/index" th:text="#{home}">Home</a></li>
+                </ul>
+            </nav>
+            <div class="user-container">
+                <ul>
+                    <li><a th:href="@{/pricing}" th:if="${isAdmin}" th:text="#{admin.pricing}">Change pricing</a></li>
+                    <li><a th:href="@{/signin}" th:unless="${isAuthorized}" th:text="#{signing}">Sign in</a></li>
+                    <li><a th:href="@{/login}" th:unless="${isAuthorized}" th:text="#{login}" >Login</a></li>
+                    <li><span th:text="${username}" th:if="${isAuthorized}">Username</span></li>
+                    <li><a class="logout" th:href="@{/logout}" th:if="${isAuthorized}" th:text="#{logout}">Logout</a></li>
+                </ul>
+            </div>
+        </header>
+    </div>
+</body>
+</html>

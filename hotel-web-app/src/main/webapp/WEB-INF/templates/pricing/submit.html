@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="../../../css/styles.css" th:href="@{/css/styles.css}">
+    <title th:text="#{title}">Webtech Hotel - Admin</title>
+</head>
+
+<body>
+    <div th:replace="fragments/fragments :: navbar"></div>
+    <div class="main-container">
+        <main>
+            <div class="submit-pricing-container">
+                <form th:action="@{pricing/submit}" method="post" th:object="${roomType}">
+                    <h3 th:text="#{form.title}">Enter the new price for the room type:</h3>
+                    <p th:text="#{room.type} + ': ' + #{room.type.__*{name}__}">Room type:</p>
+                    <p th:text="#{price.old} + ': $' + *{price}">Old price:</p>
+                    <div>
+                        <label for="price" th:text="#{price.new}">New price:</label>
+                        <input type="number" min="0" th:field="*{price}" required>
+                    </div>
+                    <input type="hidden" th:field="*{name}"/>
+                    <input type="hidden" th:field="*{freeRooms}"/>
+                    <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Submit</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

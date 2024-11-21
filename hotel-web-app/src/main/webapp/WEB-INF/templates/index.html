@@ -1,9 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Welcome</title>
+    <link rel="stylesheet" href="../../css/styles.css" th:href="@{/css/styles.css}">
+    <title th:text="#{title}">Webtech Hotel</title>
 </head>
+
 <body>
-    <h1>Welcome, <span th:text="${userName}">User</span>!</h1>
+    <div th:replace="fragments/fragments :: navbar"></div>
+    <div class="main-container">
+        <main>
+            <div class="rooms-container">
+                <div class="room-container">
+                    <form method="post" th:action="@{booking}" th:object="${roomType}">
+                        <p th:text="#{room.type}">Type:</p>
+                        <input type="hidden" id="roomType" value="thymeleaf type value">
+                        <p th:text="#{room.price}">Price:</p>
+                        <p th:text="#{free.rooms}">Free rooms:</p>
+                        <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Book Now</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
 </body>
 </html>

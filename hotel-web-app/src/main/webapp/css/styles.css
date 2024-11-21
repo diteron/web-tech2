@@ -1,11 +1,67 @@
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #e9f1ef;
+}
+
+.main-container {
+    margin-inline: auto;
+    padding-top: 4rem;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+}
+
+.navbar-container {
+    top: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    background-color: #c8c8d8;  
+}
+.navbar-container header {
+    text-align: center;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.navbar-container nav {
+    grid-column: 2 / 3;
+    all: unset;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.navbar-container .user-container {
+    grid-column: 3 / 4;
+    all: unset;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.navbar-container ul {
+    display: flex;
+    list-style: none;
+}
+.navbar-container li {
+    margin-left: 0;
+    margin-right: 2.5em;
+    margin-bottom: 0;
+    opacity: 1;
+}
+.navbar-container a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.navbar-container a.logout {
+    color: #da1b0e;
+}
+
+.login-body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
-    background-color: #f4f4f9;
 }
 .login-container {
     background-color: #ffffff;
@@ -56,4 +112,80 @@ body {
     font-size: 14px;
     text-align: center;
     margin-bottom: 10px;
+}
+
+.rooms-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.room-container {
+    border-radius: 6px;
+    margin: 0.7rem;
+    min-width: 20rem;
+    background-color: #d9e4c9;  
+    padding: 0.6rem;
+}
+.room-container p {
+    margin: 0.6rem 0 0.6rem 0;
+}
+.room-container .submit-btn {
+    margin-top: 0.8rem;
+}
+
+.submit-pricing-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    border-radius: 6px;
+    min-width: 20rem;
+    background-color: #d9e4c9;  
+    padding: 0.6rem;
+}
+.submit-pricing-container p, .submit-pricing-container div {
+    margin: 0.3rem 0 0.3rem 0;
+}
+.submit-pricing-container .submit-btn {
+    margin-top: 0.8rem;
+    max-width: 10rem;
+}
+
+.room-types-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+.room-type-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border-radius: 6px;
+    min-width: 20rem;
+    background-color: #d9e4c9;  
+    padding: 0.3rem 0 0.3rem 0.6rem;
+}
+.room-type-container p {
+    margin: 1rem 2rem 1rem 0;
+}
+.room-type-container .submit-btn {
+    margin: 0.3rem 0 0.3rem 0;
+    max-width: 10rem;
+}
+
+.booking-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    border-radius: 6px;
+    min-width: 20rem;
+    background-color: #d9e4c9;  
+    padding: 0.6rem;
+}
+.booking-container p {
+    margin: 1rem 2rem 1rem 0;
+}
+.booking-container .submit-btn {
+    margin: 0.3rem 0 0.3rem 0;
+    max-width: 10rem;
 }

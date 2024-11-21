@@ -14,17 +14,26 @@ import by.bsuir.hotelwebapp.config.ThymeleafConfig;
 
 import java.io.IOException;
 
-@WebServlet("/index")
+@WebServlet("/login")
 public class IndexServlet extends HttpServlet {
+    private JakartaServletWebApplication jakartaWebApp;
+    private ITemplateEngine templateEngine;
+
+    @Override
+    public void init() throws ServletException {
+        jakartaWebApp = JakartaServletWebApplication.buildApplication(getServletContext());
+        templateEngine = ThymeleafConfig.buildTemplateEngine(jakartaWebApp);
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JakartaServletWebApplication jakartaWebApp = JakartaServletWebApplication.buildApplication(getServletContext());
-        ITemplateEngine templateEngine = ThymeleafConfig.buildTemplateEngine(jakartaWebApp);
-
         resp.setContentType("text/html;charset=UTF-8");
         WebContext context = new WebContext(jakartaWebApp.buildExchange(req, resp), req.getLocale());
 
-        context.setVariable("userName", "John Doe");
+        context.setVariable("username", "admin");
+        context.setVariable("isAuthorized", false);
+        context.setVariable("isAdmin", true);
+
         templateEngine.process("login/login", context, resp.getWriter());
     }
 }
