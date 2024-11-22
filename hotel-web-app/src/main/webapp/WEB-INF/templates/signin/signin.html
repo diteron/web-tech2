@@ -9,19 +9,21 @@
 
 <body>
     <div class="login-container">
-        <h1 th:text="#{signin}">Login</h1>
-        <div th:if="${error}" class="error-message" th:text="${error}"></div>
-        <form th:action="@{/signin}" method="post" th:object="${user}">
-            <div class="form-group">
-                <label th:text="#{username}" for="username">Username:</label>
-                <input type="text" id="username" th:field="*{username}" required>
-            </div>     
-            <div class="form-group">
-                <label th:text="#{password}" for="password">Password:</label>
-                <input type="password" id="password" th:field="*{password}" required>
-            </div>
-            <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Sign in</button>
-        </form>
+        <main>
+            <h1 th:text="#{signin}">Login</h1>
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+            <form th:action="@{/signin}" method="post" th:object="${user}">
+                <div class="form-group">
+                    <label th:text="#{username}" for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>     
+                <div class="form-group">
+                    <label th:text="#{password}" for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Sign in</button>
+            </form>
+        </main>
     </div>
 </body>
 </html>

@@ -14,7 +14,7 @@ import by.bsuir.hotelwebapp.config.ThymeleafConfig;
 
 import java.io.IOException;
 
-@WebServlet("/login")
+@WebServlet("/home")
 public class IndexServlet extends HttpServlet {
     private JakartaServletWebApplication jakartaWebApp;
     private ITemplateEngine templateEngine;
@@ -29,11 +29,6 @@ public class IndexServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
         WebContext context = new WebContext(jakartaWebApp.buildExchange(req, resp), req.getLocale());
-
-        context.setVariable("username", "admin");
-        context.setVariable("isAuthorized", false);
-        context.setVariable("isAdmin", true);
-
-        templateEngine.process("login/login", context, resp.getWriter());
+        templateEngine.process("home", context, resp.getWriter());
     }
 }

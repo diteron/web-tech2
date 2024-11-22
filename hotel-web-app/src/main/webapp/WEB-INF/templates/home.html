@@ -10,12 +10,12 @@
     <div class="main-container">
         <main>
             <div class="rooms-container">
-                <div class="room-container">
+                <div class="room-container" th:each="roomType : ${roomTypes}">
                     <form method="post" th:action="@{booking}" th:object="${roomType}">
-                        <p th:text="#{room.type}">Type:</p>
-                        <input type="hidden" id="roomType" value="thymeleaf type value">
-                        <p th:text="#{room.price}">Price:</p>
-                        <p th:text="#{free.rooms}">Free rooms:</p>
+                        <p th:text="#{room.type} + ': ' + #{room.type.__*{name}__}">Room type</p>
+                        <input type="hidden" name="roomType" th:value="${roomType}">
+                        <p th:text="#{room.price} + ': $' + *{price}">Price:</p>
+                        <p th:text="#{free.rooms} + ': ' + *{freeRooms}">Free rooms:</p>
                         <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Book Now</button>
                     </form>
                 </div>
