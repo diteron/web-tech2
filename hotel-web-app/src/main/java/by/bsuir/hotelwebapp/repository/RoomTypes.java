@@ -8,5 +8,5 @@ import jakarta.data.repository.Find;
 
 public interface RoomTypes extends CrudRepository<RoomType, Long> {
     @Find
-    Optional<RoomType> getByName(String name);
+    Optional<RoomType> findByName(String name);
 }

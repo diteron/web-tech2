@@ -8,7 +8,7 @@ import jakarta.data.repository.Find;
 import jakarta.data.repository.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface Users extends CrudRepository<User, Long> {
     @Find
     Optional<User> findByUsername(String username);
 }
