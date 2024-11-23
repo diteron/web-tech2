@@ -17,6 +17,11 @@ repositories {
 
 dependencies {
     implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+	implementation 'org.hibernate.orm:hibernate-core:6.6.3.Final'
+	implementation 'org.hibernate.orm:hibernate-hikaricp:6.6.3.Final'
+	implementation 'com.zaxxer:HikariCP:6.2.1'
+	implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+	implementation 'jakarta.data:jakarta.data-api:1.0.1'
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
 }
 

@@ -15,14 +15,14 @@ import by.bsuir.hotelwebapp.config.ThymeleafConfig;
 import java.io.IOException;
 
 @WebServlet("/home")
-public class IndexServlet extends HttpServlet {
+public class HomeServlet extends HttpServlet {
     private JakartaServletWebApplication jakartaWebApp;
     private ITemplateEngine templateEngine;
 
     @Override
     public void init() throws ServletException {
-        jakartaWebApp = JakartaServletWebApplication.buildApplication(getServletContext());
-        templateEngine = ThymeleafConfig.buildTemplateEngine(jakartaWebApp);
+        jakartaWebApp = ThymeleafConfig.getJakartaServletWebApplication(getServletContext());
+        templateEngine = ThymeleafConfig.getTemplateEngine(getServletContext());
     }
 
     @Override
