@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="../../../css/styles.css" th:href="@{/css/styles.css} ">
 </head>
 
-<body>
+<body class="login-body">
     <div class="login-container">
         <main>
             <h1 th:text="#{signin}">Login</h1>
-            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+            <div th:if="${error}" class="error-message" th:text="#{__${error}__}"></div>
             <form th:action="@{/signin}" method="post" th:object="${user}">
                 <div class="form-group">
                     <label th:text="#{username}" for="username">Username:</label>
@@ -20,6 +20,10 @@
                 <div class="form-group">
                     <label th:text="#{password}" for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label th:text="#{email}" for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
                 </div>
                 <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Sign in</button>
             </form>

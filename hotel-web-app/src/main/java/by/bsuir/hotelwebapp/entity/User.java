@@ -5,6 +5,7 @@ import org.hibernate.proxy.HibernateProxy;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -12,21 +13,32 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
 
     @Column(length = 64, nullable = false, unique = true)
     private String username;
 
-    @Column(length = 128, nullable = false) // TODO: Check length of hash
+    @Column(name = "password_hash", length = 320, nullable = false)
     private String passwordHash;
 
     @Column(length = 320, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "is_admin", nullable = false)
     private Boolean isAdmin;
+
+    public User() {
+    }
+
+    public User(Long id, String username, String passwordHash, String email, Boolean isAdmin) {
+        this.id = id;
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.email = email;
+        this.isAdmin = isAdmin;
+    }
 
     public Long getId() {
         return id;
@@ -60,7 +72,7 @@ public class User {
         this.email = email;
     }
 
-    public Boolean getIsAdmin() {
+    public Boolean isAdmin() {  // TODO: Check for possible errors (method isn't named as getIsAdmin)
         return isAdmin;
     }
 

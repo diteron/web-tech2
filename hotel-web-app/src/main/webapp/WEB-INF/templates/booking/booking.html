@@ -10,7 +10,9 @@
     <div class="main-container">
         <main>
             <div class="booking-container">
-                <form method="post" th:action="@{/booking}" th:object="${roomType}">
+                <h3 th:if="${!session.user}" th:text="#{booking.login}">Please login</h3>
+
+                <form th:if="${session.user and !isBookingConfirmed}" method="post" th:action="@{/booking}" th:object="${roomType}">
                     <h3 th:text="#{form.title}">Enter number of nights:</h3>
                     <p th:text="#{room.type} + ': ' + #{room.type.__*{name}__}">Room type:</p>
                     <p>
@@ -25,8 +27,14 @@
                         <span th:text="#{form.total} + ': $'">Total sum:</span>
                         <span id="total-sum">1</span>
                     </p>
+                    <input type="hidden" name="id" th:value="*{id}">
+                    <input type="hidden" name="name" th:value="*{name}">
+                    <input type="hidden" name="price" th:value="*{price}">
+                    <input type="hidden" name="freeRooms" th:value="*{freeRooms}">
                     <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Confirm</button>
                 </form>
+
+                <h3 th:if="${isBookingConfirmed and session.user != null}" th:text="#{booking.confirmed}"></h3>
                 
                 <script type="text/javascript">
                     document.addEventListener("DOMContentLoaded", function () {

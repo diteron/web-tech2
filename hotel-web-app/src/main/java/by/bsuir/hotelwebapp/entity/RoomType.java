@@ -7,13 +7,14 @@ import org.hibernate.proxy.HibernateProxy;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 @Table(name = "room_types")
 public class RoomType {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
 
@@ -23,8 +24,18 @@ public class RoomType {
     @Column(nullable = false)
     private Integer price;
 
-    @Column(nullable = false)
+    @Column(name = "free_rooms", nullable = false)
     private Integer freeRooms;
+
+    public RoomType() {
+    }
+
+    public RoomType(Long id, String name, Integer price, Integer freeRooms) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.freeRooms = freeRooms;
+    }
 
     public Long getId() {
         return id;
@@ -56,6 +67,16 @@ public class RoomType {
 
     public void setFreeRooms(Integer freeRooms) {
         this.freeRooms = freeRooms;
+    }
+
+    public void decrementFreeRooms() {
+        if (freeRooms > 0) {
+            --freeRooms;
+        }
+    }
+
+    public void incrementFreeRooms() {
+        ++freeRooms;
     }
 
     @Override

@@ -3,6 +3,7 @@ package by.bsuir.hotelwebapp.config;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
 import by.bsuir.hotelwebapp.entity.Booking;
@@ -15,7 +16,6 @@ public class HibernateSession {
     static {
         try {
             sessionFactory = new Configuration()
-                    .configure("hibernate.cfg.xml")
                     .addAnnotatedClass(User.class)
                     .addAnnotatedClass(Booking.class)
                     .addAnnotatedClass(RoomType.class)
@@ -29,6 +29,10 @@ public class HibernateSession {
 
     public static Session getSession() {
         return sessionFactory.openSession();
+    }
+
+    public static StatelessSession getStatelessSession() {
+        return sessionFactory.openStatelessSession();
     }
 
     public static void shutdown() {

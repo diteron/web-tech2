@@ -1,4 +1,4 @@
-package by.bsuir.hotelwebapp;
+package by.bsuir.hotelwebapp.servlet;
 
 import java.io.IOException;
 

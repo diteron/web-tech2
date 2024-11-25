@@ -5,15 +5,19 @@ import java.time.LocalDateTime;
 import org.hibernate.proxy.HibernateProxy;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "bookings")
 public class Booking {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
     private Long id;
 
@@ -21,19 +25,26 @@ public class Booking {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne()
+    @ManyToOne()
     @JoinColumn(name = "room_type_id", nullable = false)
     private RoomType roomType;
 
-    @Column(nullable = false)
+    @Column(name = "number_of_nights", nullable = false)
     private Integer numberOfNights;
 
-    @Column(nullable = false)
+    @Column(name = "booking_date", nullable = false)
     private LocalDateTime bookingDate;
-
 
     public Booking() {
         bookingDate = LocalDateTime.now();
+    }
+    
+    public Booking(Long id, User user, RoomType roomType, Integer numberOfNights, LocalDateTime bookingDate) {
+        this.id = id;
+        this.user = user;
+        this.roomType = roomType;
+        this.numberOfNights = numberOfNights;
+        this.bookingDate = bookingDate;
     }
 
     public Long getId() {
@@ -76,7 +87,13 @@ public class Booking {
         this.bookingDate = bookingDate;
     }
 
-        @Override
+    public void decrementNumberOfNights() {
+        if (numberOfNights > 0) {
+            --numberOfNights;
+        }
+    }
+
+    @Override
     public final boolean equals(Object object) {
         if (this == object) {
             return true;

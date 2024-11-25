@@ -8,16 +8,16 @@
         <header>
             <nav>
                 <ul>
-                    <li><a th:href="@{/home}" th:text="#{home}">Home</a></li>
+                    <li><a th:href="@{/home}" th:text="#{home}" style="font-weight: bold;">Home</a></li>
                 </ul>
             </nav>
             <div class="user-container">
                 <ul>
-                    <li><a th:href="@{/pricing}" th:if="${isAdmin}" th:text="#{admin.pricing}">Change pricing</a></li>
-                    <li><a th:href="@{/signin}" th:unless="${isAuthorized}" th:text="#{signin}">Sign in</a></li>
-                    <li><a th:href="@{/login}" th:unless="${isAuthorized}" th:text="#{login}" >Login</a></li>
-                    <li><span th:text="${username}" th:if="${isAuthorized}">Username</span></li>
-                    <li><a class="logout" th:href="@{/logout}" th:if="${isAuthorized}" th:text="#{logout}">Logout</a></li>
+                    <li><a th:href="@{/pricing}" th:if="${session.user and session.user.isAdmin}" th:text="#{admin.pricing}" style="font-weight: bold;">Change pricing</a></li>
+                    <li><a th:href="@{/signin}" th:unless="${session.user}" th:text="#{signin}" style="font-weight: bold;">Sign in</a></li>
+                    <li><a th:href="@{/login}" th:unless="${session.user}" th:text="#{login}" style="font-weight: bold;">Login</a></li>
+                    <li><span th:if="${session.user}" style="font-weight: bold;" th:text="${session.user.username}">Username</span></li>
+                    <li><a class="logout" th:href="@{/logout}" th:if="${session.user}" th:text="#{logout}" style="font-weight: bold;">Logout</a></li>
                 </ul>
             </div>
         </header>
