@@ -10,15 +10,16 @@
     <div class="main-container">
         <main>
             <div class="submit-pricing-container">
-                <form th:action="@{pricing/submit}" method="post" th:object="${roomType}">
+                <form th:action="@{/pricing/submit}" method="post" th:object="${roomType}">
                     <h3 th:text="#{form.title}">Enter a new price for the room type:</h3>
                     <p th:text="#{room.type} + ': ' + #{room.type.__*{name}__}">Room type:</p>
                     <p th:text="#{price.old} + ': $' + *{price}">Old price:</p>
+                    <input type="hidden" name="id" th:value="*{id}">
+                    <input type="hidden" name="name" th:value="*{name}">
                     <div>
                         <label for="price" th:text="#{price.new}">New price:</label>
                         <input id="price" type="number" name="price" min="0" required>
                     </div>
-                    <input type="hidden" name="name" th:value="*{name}">
                     <input type="hidden" name="freeRooms" th:value="*{freeRooms}">
                     <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Submit</button>
                 </form>

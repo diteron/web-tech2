@@ -12,7 +12,7 @@
             <div class="booking-container">
                 <h3 th:if="${!session.user}" th:text="#{booking.login}">Please login</h3>
 
-                <form th:if="${session.user and !isBookingConfirmed}" method="post" th:action="@{/booking}" th:object="${roomType}">
+                <form th:if="${session.user and !isBookingConfirmed}" method="post" th:object="${roomType}">
                     <h3 th:text="#{form.title}">Enter number of nights:</h3>
                     <p th:text="#{room.type} + ': ' + #{room.type.__*{name}__}">Room type:</p>
                     <p>

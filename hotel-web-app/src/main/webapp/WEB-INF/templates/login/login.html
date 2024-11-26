@@ -12,7 +12,7 @@
         <main>
             <h1 th:text="#{title.login}">Login</h1>
             <div class="error-message" th:if="${error}" th:text="#{__${error}__}"></div>
-            <form th:action="@{/login}" method="post">
+            <form method="post">
                 <div class="form-group">
                     <label for="username" th:text="#{title.username}">Username:</label>
                     <input id= "username" type="text" name="username" required>

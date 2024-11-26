@@ -11,7 +11,7 @@
         <main>
             <div class="rooms-container">
                 <div class="room-container" th:each="roomType : ${roomTypes}">
-                    <form method="get" th:action="@{booking}" th:object="${roomType}">
+                    <form method="get" th:action="@{/booking}" th:object="${roomType}">
                         <h3 th:text="#{room.type.__*{name}__}">Room type</h3>
                         <input type="hidden" name="id" th:value="*{id}">
                         <input type="hidden" name="name" th:value="*{name}">

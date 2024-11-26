@@ -11,12 +11,13 @@
         <main>
             <div class="room-types-container">
                 <div class="room-type-container" th:each="roomType : ${roomTypes}">
-                    <form th:action="@{/pricing}" method="post" th:object="${roomType}">
+                    <form th:action="@{/pricing/submit}" method="get" th:object="${roomType}">
+                        <input type="hidden" name="id" th:value="*{id}"/>
                         <input type="hidden" name="name" th:value="*{name}"/>
                         <input type="hidden" name="price" th:value="*{price}"/>
                         <input type="hidden" name="freeRooms" th:value="*{freeRooms}"/>
                         <p th:text="#{room.type} + ': ' + #{room.type.__*{name}__} + ', ' + #{room.price} + ': ' + *{price}">Room type</p>
-                        <button type="button" class="submit-btn" th:text="#{form.button.submit}">Change price</button>
+                        <button type="submit" class="submit-btn" th:text="#{form.button.submit}">Change price</button>
                     </form>
                 </div>
             </div>
