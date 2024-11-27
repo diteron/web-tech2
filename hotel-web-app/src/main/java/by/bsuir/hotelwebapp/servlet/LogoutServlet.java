@@ -18,6 +18,7 @@ public class LogoutServlet extends HttpServlet {
         HttpSession httpSession = req.getSession(false);
         if (httpSession != null) {
             httpSession.removeAttribute("user");
+            httpSession.invalidate();
         }
 
         resp.sendRedirect("home");

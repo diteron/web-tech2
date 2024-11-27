@@ -39,7 +39,7 @@ public class HomeServlet extends HttpServlet {
             hibernateSession.beginTransaction();
 
             RoomTypeService roomTypeService = new RoomTypeService(hibernateSession);
-            List<RoomTypeResponseDTO> roomTypes = roomTypeService.getAllRoomTypes();
+            List<RoomTypeResponseDTO> roomTypes = roomTypeService.getAvailableRooms();
             context.setVariable("roomTypes", roomTypes);
             
             hibernateSession.getTransaction().commit();

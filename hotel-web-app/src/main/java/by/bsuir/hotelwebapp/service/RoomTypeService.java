@@ -32,6 +32,10 @@ public class RoomTypeService {
                 roomType.getPrice(), roomType.getFreeRooms());
     }
 
+    public List<RoomTypeResponseDTO> getAvailableRooms() {
+        return roomTypes.findAvailableRooms().map(ROOM_TYPE_MAPPER::toResponseDTO).toList();
+    }
+
     public List<RoomTypeResponseDTO> getAllRoomTypes() {
         return roomTypes.findAll().map(ROOM_TYPE_MAPPER::toResponseDTO).toList();
     }
